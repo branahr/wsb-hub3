@@ -1,0 +1,538 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Plugins - WSB HUB3 - Stable (latest release)\n"
+"Language: \n"
+"POT-Creation-Date: 2021-01-13 20:36+0000\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: Loco https://localise.biz/"
+
+#: admin/class-wsb-hub3-admin.php:324
+msgid "Address"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:62
+msgid "Address can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:66
+msgid "Address is not valid"
+msgstr ""
+
+#: public/class-wsb-hub3-public.php:475
+msgid "Amount"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:484
+msgid "Barcode"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:292
+msgid "Barcode color"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:248
+msgid "Barcode image type"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:282
+msgid "Barcode padding in pixels"
+msgstr ""
+
+#. Description of the plugin
+msgid "Barcode payment details plugin for Woocommerce (for Croatian banks)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:241
+msgid "Barcode settings"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:363
+msgid "Barcode text contains invalid characters"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:264
+msgid "Barcode width in pixels"
+msgstr ""
+
+#. Author of the plugin
+msgid "Branko Borilovic"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:402
+msgid "Checkbox value is not valid."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:341
+msgid "City"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:110
+msgid "City can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:114
+msgid "City is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:289
+msgid "Color"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:397
+msgid "d:day, m:month, y:year"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:132
+msgid "Data will be shown only on this order status."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:373
+msgid "Date"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:375
+msgid "Date-Order"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:402
+msgid "ddmm"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:401
+msgid "ddmmyy"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:400
+msgid "ddmmyyyy"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:439 public/class-wsb-hub3-public.php:484
+msgid "Description"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:226
+msgid "Description can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:230
+msgid "Description too long or contains invalid characters"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:311
+msgid "Display in email can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:315
+msgid "Display in email is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:125
+msgid "Enable only for customers with Croatian billing address"
+msgstr ""
+
+#: includes/class-wsb-hub3-shortcodes.php:71
+#: public/class-wsb-hub3-public.php:236 public/class-wsb-hub3-public.php:289
+msgid "Enlarge (New window)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:122
+msgid "For Croatian customers only"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:251
+msgid "For large barcode only"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:115 admin/class-wsb-hub3-admin.php:482
+msgid "General settings"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:256
+msgid "GIF"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:161 admin/class-wsb-hub3-admin.php:175
+#: admin/class-wsb-hub3-admin.php:189
+msgid "Html text + large barcode"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://profiles.wordpress.org/branahr"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://www.webstudiobrana.com/wsb-hub3"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:162 admin/class-wsb-hub3-admin.php:176
+#: admin/class-wsb-hub3-admin.php:190
+msgid "HUB-3A slip + large barcode"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:211
+msgid "HUB-3A slip width"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:220
+msgid "HUB-3A slip width in email"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:213
+msgid "HUB-3A slip width in pixels"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:92
+msgid "HUB3"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:727
+msgid ""
+"HUB3 plugin works only if \"Direct bank transfer\" payment method is active!"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:716
+msgid "HUB3 plugin works properly only with HRK as default currency!"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:349 admin/class-wsb-hub3-admin.php:351
+#: public/class-wsb-hub3-public.php:476
+msgid "IBAN"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:157
+msgid "IBAN can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:161
+msgid "IBAN is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:384
+msgid ""
+"If you use prefix in Booster, please make sure it contains only numbers and "
+"dash(es)! For example: 2021-"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:97
+msgid "Image color is not valid"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:79
+msgid "Image type can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:84
+msgid "Image type is not valid"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:389
+msgid "Image width must be a numeric value (2 - 4 digits)."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:254
+msgid "JPG"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:163 admin/class-wsb-hub3-admin.php:177
+#: admin/class-wsb-hub3-admin.php:191
+msgid "Large barcode only"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:404
+msgid "mmyy"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:403
+msgid "mmyyyy"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:357 public/class-wsb-hub3-public.php:478
+msgid "Model"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:174
+msgid "Model is not valid"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:45
+msgid "Name can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:49
+msgid "Name is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:414 admin/class-wsb-hub3-admin.php:423
+msgid "Numeric value up to 6 digits"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:372
+msgid "Order"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:345
+msgid "Order details page display parameter can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:349
+msgid "Order details page display prameter is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:381
+msgid "Order nr."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:388
+msgid "Order number by Booster for WooCommerce"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:444
+msgid "Order payment"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:294
+msgid "Order status can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:298
+msgid "Order status is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:129
+msgid "Order Status to display data"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:374
+msgid "Order-Date"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:280
+msgid "Padding"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:144
+msgid "Padding value is not valid"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:376
+msgid "Payment description text contains invalid characters"
+msgstr ""
+
+#: public/class-wsb-hub3-public.php:472
+msgid "Payment details"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:443
+msgid "Payment for Order [order]"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:359
+msgid "Payment model (2 digits)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:432
+msgid "Payment purpose code. Format: 4 capital letters."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:711
+msgid "Please save your HUB3 recipient settings!"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:255
+msgid "PNG"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:332
+msgid "Postcode"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:127
+msgid "Postcode can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:131
+msgid "Postcode is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:430 public/class-wsb-hub3-public.php:482
+msgid "Purpose code"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:187
+msgid "Purpose is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:316 admin/class-wsb-hub3-admin.php:483
+#: public/class-wsb-hub3-public.php:474
+msgid "Recipient"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:326
+msgid "Recipient address"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:343
+msgid "Recipient city"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:310
+msgid "Recipient details"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:318
+msgid "Recipient name"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:334
+msgid "Recipient postcode (5 digits)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:366 public/class-wsb-hub3-public.php:480
+msgid "Reference"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:243
+msgid "Reference can not be empty"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:394
+msgid "Reference date format"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:277
+msgid "Reference date format can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:281
+msgid "Reference date format is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:369
+msgid "Reference format"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:247
+msgid "Reference is not valid"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:260
+msgid "Reference order can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:264
+msgid "Reference Order format is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:412
+msgid "Reference prefix"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:200
+msgid "Reference prefix must be a numeric value and can hold up to 6 digits."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:421
+msgid "Reference sufix"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:213
+msgid "Reference sufix must be a numeric value and can hold up to 6 digits."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:204
+msgid "Send barcode to admin"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:207
+msgid "Send barcode to admin in email"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:200
+msgid "Send HUB-3A slip to admin in email"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:183
+msgid "Send in email"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:197
+msgid "Send slip to admin"
+msgstr ""
+
+#: public/class-wsb-hub3-public.php:239 public/class-wsb-hub3-public.php:292
+msgid "Show larger barcode"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:169
+msgid "Show on order details page"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:155
+msgid "Show on thankyou page"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:387
+msgid "Standard Order ID"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:147
+msgid "Text above barcode"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:139
+msgid "Text above payment details"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:149
+msgid "Text to be shown above barcode"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:141
+msgid "Text to be shown above payment details"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:328
+msgid "Thank you page display parameter can not be empty"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php:332
+msgid "Thank you page display prameter is not valid"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:271
+msgid "Width (email)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:262
+msgid "Width (website)"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:273
+msgid "Width in pixels of barcode sent in email"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:222
+msgid "Width in pixels of HUB-3A slip sent in email "
+msgstr ""
+
+#. Name of the plugin
+msgid "WSB HUB3"
+msgstr ""
+
+#: wsb-hub3.php:88
+msgid "WSB HUB3 requires WooCommerce to be installed and active."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:441
+msgid "You can use placeholder for Order ID: [order]"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:406
+msgid "yy"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php:405
+msgid "yyyy"
+msgstr ""

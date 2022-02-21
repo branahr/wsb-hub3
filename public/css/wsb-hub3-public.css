@@ -1,0 +1,30 @@
+.hub3-table {
+    border-top: 1px dashed #ddd; 
+}
+.hub3-table tr td {
+    padding: .5em 1.5em;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px dashed #ddd;
+}
+.barcodediv {
+
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 30px;;
+}
+.slipdiv {
+
+    text-align: center;
+    margin-bottom: 30px;
+}
+.barcode-text {
+    text-align: center;
+}
+.barcodediv img, .slipdiv img {
+    margin: 10px auto;
+    max-width: 100%;
+    height: auto;
+}
