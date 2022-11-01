@@ -377,19 +377,6 @@ class Wsb_Hub3_Admin {
 					'default' 	  => 'orderid',
 					'desc_tip'    => true,
 				),
-				'wsb_hub3_receiver_order' => array(
-                    'name'    => __( 'Order nr.', 'wsb-hub3' ),
-                    'type'    => 'select',
-                    'class'   => 'wsb-hub3-admin-tab-field',
-                    'desc'    => __( 'If you use prefix in Booster, please make sure it contains only numbers and dash(es)! For example: 2021-', 'wsb-hub3' ),
-                    'id'      => 'wsb_hub3_receiver_order',
-                    'options' => array(
-                      'orderid'    => __( 'Standard Order ID', 'wsb-hub3' ),
-					  'booster' 	=> __( 'Order number by Booster for WooCommerce', 'wsb-hub3' ),
-					),
-					'default' 	  => 'orderid',
-					'desc_tip'    => true,
-				),
 				'wsb_hub3_receiver_reference_date' => array(
                     'name'    => __( 'Reference date format', 'wsb-hub3' ),
                     'type'    => 'select',
@@ -576,12 +563,6 @@ class Wsb_Hub3_Admin {
 			$reference = $this->validator->is_valid_reference(sanitize_text_field($_POST['wsb_hub3_receiver_reference']));
 			if(!$reference) {	
 				unset($receiver_settings['wsb_hub3_receiver_reference']);
-			}
-		}
-		if (isset($_POST['wsb_hub3_receiver_order'])) {
-			$reference_order = $this->validator->is_valid_reference_order(sanitize_text_field($_POST['wsb_hub3_receiver_order']));
-			if(!$reference_order) {	
-				unset($receiver_settings['wsb_hub3_receiver_order']);
 			}
 		}
 		if (isset($_POST['wsb_hub3_receiver_reference_date'])) {

@@ -3,9 +3,9 @@ Contributors: branahr
 Donate link: https://www.paypal.me/branahr
 Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
-Tested up to: 5.9
+Tested up to: 6.0.3
 Requires PHP: 5.6
-Stable tag: 1.2.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ If admin updates an order from the backend (i.e. adds a new product to the order
 - PHP version 5.6 and above
 - GD library installed on server
 - Wordpress version 5.0 and above
-- Woocommerce plugin installed and enabled (v 3.3 or greater)
+- Woocommerce plugin installed and enabled (v 4.0 or greater)
 - Direct Bank Transfer payment plugin (BACS) enabled
 - HRK as a default payment currency
 
@@ -35,6 +35,7 @@ The official documentation is located at the [WSB HUB3 Documentation](https://ww
 
 ### Features ###
 
+* Sequential order number plugins supported
 * Selectable display options for payment details
 * JPG, PNG or GIF format can be selected for barcode image
 * Adjustable reference number pattern
@@ -89,6 +90,9 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 1.3.0 =
+* Enhancement: added support for many sequential order number plugins
 
 = 1.2.1 =
 * Fix: No HUB3 slip created if "allow_url_fopen" is set to "Off"
