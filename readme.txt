@@ -3,9 +3,9 @@ Contributors: branahr
 Donate link: https://www.paypal.me/branahr
 Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
-Tested up to: 6.0.3
+Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.3.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ If admin updates an order from the backend (i.e. adds a new product to the order
 - Wordpress version 5.0 and above
 - Woocommerce plugin installed and enabled (v 4.0 or greater)
 - Direct Bank Transfer payment plugin (BACS) enabled
-- HRK as a default payment currency
+- HRK or EUR as a default payment currency
 
 ### Documentation ###
 
@@ -48,7 +48,7 @@ The official documentation is located at the [WSB HUB3 Documentation](https://ww
 ### Reference number pattern ###
 
 For payment reference number you can select one of several predefined patterns:
-- orderid (can be order number provided by Booster for WooCommerce)
+- order (can be custom order number provided by other plugin)
 - date
 - order-date
 - date-order
@@ -91,8 +91,10 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 
 == Changelog ==
 
-= 1.3.0 =
+= 2.0 =
 * Enhancement: added support for many sequential order number plugins
+* Enhancement: company name can be shown on a payment slip
+* Enhancement: added support for EUR currency
 
 = 1.2.1 =
 * Fix: No HUB3 slip created if "allow_url_fopen" is set to "Off"

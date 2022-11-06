@@ -38,6 +38,15 @@ class Wsb_Hub3_Public {
 	private $version;
 
 	/**
+	 * Validator class
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      Wsb_Hub3_Validator   $validator  
+	 */
+	protected $validator;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -48,7 +57,8 @@ class Wsb_Hub3_Public {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wsb-hub3-validator.php';
+		$this->validator = new Wsb_Hub3_Validator();
 	}
 
 	/**
@@ -80,6 +90,15 @@ class Wsb_Hub3_Public {
 	function wsb_hub3_update_barcode_meta( $order_id, $data ) {
 
 		$order = wc_get_order( $order_id );
+
+		if (isset($_POST['wsb_barcode_iban'])) {
+			$iban = esc_attr( $_POST['wsb_barcode_iban']);
+			if($this->validator->is_valid_iban(sanitize_text_field($iban))) {
+				$order->update_meta_data( '_wsb_barcode_iban', $iban);
+				$order->save();
+			}
+		}
+		$receiver_iban = get_post_meta( $order_id, '_wsb_barcode_iban', true );
 		$order_status = $order->get_status();
 		$croatian_only = esc_html(get_option( 'wsb_hub3_croatian_customers_only', 'no' ));
 		if( "yes" == $croatian_only ){
@@ -91,7 +110,18 @@ class Wsb_Hub3_Public {
 			return;
 		}
 
-		$url = "https://hub3.bigfish.software/api/v1/barcode";
+		$url = "https://hub3.bigfish.software/api/v2/barcode";
+
+		if(!$receiver_iban) $receiver_iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
+		// $payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
+		// $accounts = array();
+		// foreach($payment_method->account_details as $bank_account){
+		// 	if(empty($bank_account['iban'])) continue;
+		// 	if($bank_account['iban'] == get_option( 'wsb_barcode_iban' )){
+		// 		$receiver_iban = $bank_account['iban'];
+		// 		break;
+		// 	}
+		// }
 
 		$img_type = get_option( 'wc_wsb_hub3_admin_tab_img_type', 'png' );
 		$img_padding = get_option( 'wsb_hub3_img_padding', '10' );
@@ -99,10 +129,24 @@ class Wsb_Hub3_Public {
 		$amount = (float)$order->get_total();
 		$palatali = array("Č", "č", "Ć", "ć", "Ž", "ž", "Š", "š", "Đ", "đ");
 
-        $name_max_chars = 30;	
+        $name_max_chars = 30;
+		$street_max_chars = 27;	
 		$first_name = $data['billing_first_name'];
 		$last_name = $data['billing_last_name'];
 		$sender_name = esc_html($first_name . " " . $last_name);
+		$sender_street = $data['billing_address_1'];
+
+		$r1_checkbox = get_post_meta( $order_id, 'R1 račun', true );
+		if( !empty( $r1_checkbox ) ){
+			$sender_name = esc_html(get_post_meta( $order_id, 'Ime tvrtke', true ));
+			$sender_street = esc_html(get_post_meta( $order_id, 'Adresa tvrtke', true ));
+		} else {
+			$company = $order->get_billing_company();
+			if(!empty($company)){
+				$sender_name = esc_html($company);
+			} 
+		}
+		
 		$name_length = strlen($sender_name);
 		$broj_palatala_name = 0;
 		foreach($palatali as $val){
@@ -113,8 +157,6 @@ class Wsb_Hub3_Public {
 			$sender_name = substr($sender_name, 0, $name_max_chars);
 		}
 
-		$street_max_chars = 27;
-		$sender_street = $data['billing_address_1'];
 		$street_length = strlen($sender_street);
 		$broj_palatala_street = 0;
 		foreach($palatali as $val){
@@ -142,11 +184,10 @@ class Wsb_Hub3_Public {
 		$receiver_name = get_option( 'wsb_hub3_receiver_name' );
 		$receiver_street = get_option( 'wsb_hub3_receiver_address' );
 		$receiver_place = get_option( 'wsb_hub3_receiver_postcode' ) . " " . get_option( 'wsb_hub3_receiver_city' );
-		$receiver_iban = get_option( 'wsb_hub3_receiver_iban' );
 		$receiver_model = get_option( 'wsb_hub3_receiver_model' );
 		$receiver_reference = $this->get_reference($order_id);
 		$purpose = get_option( 'wsb_hub3_payment_purpose' );
-		$order_number = $this->get_order_number($order_id);
+		$order_number = $order->get_order_number();
 		$description = str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description' ));
 
 		$hubparams = array();
@@ -158,13 +199,12 @@ class Wsb_Hub3_Public {
 			$hubparams['options']['color'] = '#000000';
 		}
 		
-		if(!empty($img_padding)){
-			$hubparams['options']['padding'] = $img_padding;
-		}
+		$hubparams['options']['padding'] = !empty($img_padding) ? (int) $img_padding : 0;
 		$hubparams['options']['scale'] = 3;
 		$hubparams['options']['ratio'] = 3;
 		
-		$hubparams['data']['amount'] = $amount;
+		$hubparams['data']['amount'] = (int) $amount*100;
+		$hubparams['data']['currency'] = get_woocommerce_currency();
 		$hubparams['data']['sender']['name'] = $sender_name;
 		$hubparams['data']['sender']['street'] = $sender_street;
 		$hubparams['data']['sender']['place'] = $sender_place;
@@ -200,6 +240,10 @@ class Wsb_Hub3_Public {
 			$order->update_meta_data( '_wsb_hub3_slip', $hub3_image);
 			$order->save();
 		}
+	}
+
+	function wsb_remove_bank_details(){
+		return false;
 	}
 
 	function wsb_hub3_barcode_thankyou($order_id){
@@ -412,7 +456,7 @@ class Wsb_Hub3_Public {
 				break;
 		}
 		
-		$order_number = $this->get_order_number($order_id);
+		$order_number = $order->get_order_number();
 		$reference = $order_number;
 
 
@@ -436,35 +480,12 @@ class Wsb_Hub3_Public {
 		return esc_html($receiver_reference = $reference_prefix . $reference . $reference_sufix);
 	}
 
-	function get_order_number($order_id){
-		$order = $order_id;
-		if ( class_exists( 'WC_Jetpack' ) ){
-			$booster_order_numbers_enabled = get_option( 'wcj_order_numbers_enabled', 'no' );
-			$wsb_booster_enabled = get_option('wsb_hub3_receiver_order', 'orderid');
-			if("yes" == $booster_order_numbers_enabled && "booster" == $wsb_booster_enabled) {
-				$booster_order_number_type = get_option( 'wcj_order_number_sequential_enabled', 'yes' );
-				$booster_order_number_prefix = get_option('wcj_order_number_prefix', '');
-				$booster_order_number = get_post_meta( $order_id, '_wcj_order_number', true );
-				switch ($booster_order_number_type) {
-					case 'yes':
-					case 'hash_crc32':
-						$order = $booster_order_number_prefix.$booster_order_number;
-						break;
-					case 'no':
-						$order = $booster_order_number_prefix.$order_id;
-						break;
-				}
-			}
-		}
-		
-		return $order;
-	}
-
 	function get_data_html($order_id){
-		$reference = $this->get_reference($order_id);
-		$order_number = $this->get_order_number($order_id);
-		$description = str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description', 'Plaćanje narudžbe br. [order]' ));
 		$order = wc_get_order( $order_id );
+		$order_number = $order->get_order_number();
+		$reference = $this->get_reference($order_id);
+		$description = str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description', 'Plaćanje narudžbe br. [order]' ));
+		
 		$total = $order->get_formatted_order_total();
 		$sender_name = get_post_meta( $order_id, '_wsb_sender_name', true );
 
@@ -489,26 +510,28 @@ class Wsb_Hub3_Public {
 
 	 function create_hub3($order_id){
 
+		$order = wc_get_order( $order_id );
+		$order_number = $order->get_order_number();
 		$recipient = esc_html(get_option( 'wsb_hub3_receiver_name' ));
 		$recipient_address = esc_html(get_option( 'wsb_hub3_receiver_address' ));
 		$recipient_place = esc_html(get_option( 'wsb_hub3_receiver_postcode' ) . " " . get_option( 'wsb_hub3_receiver_city' ));
-		$iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
+		$iban = get_post_meta( $order_id, '_wsb_barcode_iban', true );
+		if(!$iban) $iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
 		$reference = $reference = $this->get_reference($order_id);
-		$order_number = $this->get_order_number($order_id);
 		$description = esc_html(str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description' )));
 		$model = "HR00";
 		if(!empty(get_option( 'wsb_hub3_receiver_model' )) && "" != get_option( 'wsb_hub3_receiver_model' )){
 			$model = esc_html("HR" . get_option( 'wsb_hub3_receiver_model' ));
 		}
 		
-		$order = wc_get_order( $order_id );
-		$sender = $order->get_billing_first_name() . " " . $order->get_billing_last_name();
+		$sender = get_post_meta( $order_id, '_wsb_sender_name', true );
 		$sender_address = $order->get_billing_address_1(); 
 		$sender_address2 = $order->get_billing_address_2();
 		$sender_postcode = $order->get_billing_postcode(); 
 		$sender_city = $order->get_billing_city();
+		$currency = get_woocommerce_currency();
 		$total = esc_html( "=" . number_format($order->get_total(),2,"",""));
-		$total2 = esc_html( "HRK = " . number_format($order->get_total(),2,",",""));
+		$total2 = esc_html( $currency. " = " . number_format($order->get_total(),2,",",""));
 
 		$img_path = plugin_dir_url( __DIR__ ) . "barcodes/";
 		$hub3a = imagecreatefromjpeg(plugin_dir_path(__DIR__) . 'public/img/hub-3a.jpg');
@@ -516,7 +539,7 @@ class Wsb_Hub3_Public {
 		$font_roboto = plugin_dir_path( __DIR__ ) . 'public/fonts/RobotoMono-Regular.ttf';
 		$font_times = plugin_dir_path( __DIR__ ) . 'public/fonts/times-new-roman.ttf';
 		
-		$this->imagettftextWsb($hub3a, 18, 0, 402, 54, $black, $font_roboto, 'HRK', 3);
+		$this->imagettftextWsb($hub3a, 18, 0, 402, 54, $black, $font_roboto, $currency, 3);
 
 		$bbox_total = imagettfbbox(18, 0, $font_roboto, $total);
 		$x_total = 768 - ( $bbox_total[4] + (strlen($total))*3 );
@@ -637,6 +660,34 @@ class Wsb_Hub3_Public {
 		$data['billing_city'] = $order->get_billing_city();
 		$this->wsb_hub3_update_barcode_meta($order_id, $data);
 		$this->create_hub3($order_id);
+	}
+
+	/**
+	 * Checkout custom fields.
+	 *
+	 * @since    2.0
+	 */
+
+	function wsb_hub3_gateway_description( $description, $gateway_id ){
+		if( 'bacs' === $gateway_id ) {
+				$payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
+				$accounts = array();
+				foreach($payment_method->account_details as $bank_account){
+					if(empty($bank_account['iban'])) continue;
+					$accounts[$bank_account['iban']] = $bank_account['account_name'];
+				}
+				
+			$description = woocommerce_form_field('wsb_barcode_iban', array(
+					'type'          => 'select',
+					'class'         => array('barcode-iban-class form-row-wide'),
+					'label'         => __('Bank account', 'wsb-hub3'),
+					'required'      => true,
+					'options'       => $accounts,
+				),'');
+		}
+
+		return $description;
+		
 	}
 
 }

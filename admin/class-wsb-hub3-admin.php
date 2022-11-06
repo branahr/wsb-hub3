@@ -693,8 +693,8 @@ class Wsb_Hub3_Admin {
 		}
 		
 		$currency = get_woocommerce_currency();
-		if("HRK" != $currency){
-			$this->validator->notices[] = array( 'message' => __( 'HUB3 plugin works properly only with HRK as default currency!', 'wsb-hub3' ), 'type' => 'error' );
+		if("HRK" != $currency && "EUR" != $currency){
+			$this->validator->notices[] = array( 'message' => __( 'HUB3 plugin works properly only with HRK or EUR as a default currency!', 'wsb-hub3' ), 'type' => 'error' );
 		}
 
 		$gateways = WC()->payment_gateways->get_available_payment_gateways();
