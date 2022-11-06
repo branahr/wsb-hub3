@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 1.2.1
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,7 @@ The official documentation is located at the [WSB HUB3 Documentation](https://ww
 ### Features ###
 
 * Sequential order number plugins supported
+* Multiple IBANs (Bank accounts)
 * Selectable display options for payment details
 * JPG, PNG or GIF format can be selected for barcode image
 * Adjustable reference number pattern
@@ -92,7 +93,8 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 == Changelog ==
 
 = 2.0 =
-* Enhancement: added support for many sequential order number plugins
+* Feature: added support for many sequential order number plugins
+* Feature: multiple bank accounts / IBANs
 * Enhancement: company name can be shown on a payment slip
 * Enhancement: added support for EUR currency
 
