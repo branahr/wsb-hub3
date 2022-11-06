@@ -3,10 +3,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Plugins - WSB HUB3 - Stable (latest release)\n"
 "Language: \n"
-"POT-Creation-Date: 2021-01-13 20:36+0000\n"
+"POT-Creation-Date: 2022-11-06 19:56+0000\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: Loco https://localise.biz/"
+
+#: public/class-wsb-hub3-public.php:683
+msgid "Account to pay"
+msgstr ""
 
 #: admin/class-wsb-hub3-admin.php:324
 msgid "Address"
@@ -20,11 +24,11 @@ msgstr ""
 msgid "Address is not valid"
 msgstr ""
 
-#: public/class-wsb-hub3-public.php:475
+#: public/class-wsb-hub3-public.php:496
 msgid "Amount"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:484
+#: admin/class-wsb-hub3-admin.php:471
 msgid "Barcode"
 msgstr ""
 
@@ -80,7 +84,7 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:397
+#: admin/class-wsb-hub3-admin.php:384
 msgid "d:day, m:month, y:year"
 msgstr ""
 
@@ -96,19 +100,19 @@ msgstr ""
 msgid "Date-Order"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:402
+#: admin/class-wsb-hub3-admin.php:389
 msgid "ddmm"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:401
+#: admin/class-wsb-hub3-admin.php:388
 msgid "ddmmyy"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:400
+#: admin/class-wsb-hub3-admin.php:387
 msgid "ddmmyyyy"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:439 public/class-wsb-hub3-public.php:484
+#: admin/class-wsb-hub3-admin.php:426 public/class-wsb-hub3-public.php:505
 msgid "Description"
 msgstr ""
 
@@ -133,7 +137,7 @@ msgid "Enable only for customers with Croatian billing address"
 msgstr ""
 
 #: includes/class-wsb-hub3-shortcodes.php:71
-#: public/class-wsb-hub3-public.php:236 public/class-wsb-hub3-public.php:289
+#: public/class-wsb-hub3-public.php:280 public/class-wsb-hub3-public.php:333
 msgid "Enlarge (New window)"
 msgstr ""
 
@@ -145,7 +149,7 @@ msgstr ""
 msgid "For large barcode only"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:115 admin/class-wsb-hub3-admin.php:482
+#: admin/class-wsb-hub3-admin.php:115 admin/class-wsb-hub3-admin.php:469
 msgid "General settings"
 msgstr ""
 
@@ -187,17 +191,17 @@ msgstr ""
 msgid "HUB3"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:727
+#: admin/class-wsb-hub3-admin.php:708
 msgid ""
 "HUB3 plugin works only if \"Direct bank transfer\" payment method is active!"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:716
-msgid "HUB3 plugin works properly only with HRK as default currency!"
+#: admin/class-wsb-hub3-admin.php:697
+msgid "HUB3 plugin works properly only with HRK or EUR as a default currency!"
 msgstr ""
 
 #: admin/class-wsb-hub3-admin.php:349 admin/class-wsb-hub3-admin.php:351
-#: public/class-wsb-hub3-public.php:476
+#: public/class-wsb-hub3-public.php:497
 msgid "IBAN"
 msgstr ""
 
@@ -207,12 +211,6 @@ msgstr ""
 
 #: includes/class-wsb-hub3-validator.php:161
 msgid "IBAN is not valid"
-msgstr ""
-
-#: admin/class-wsb-hub3-admin.php:384
-msgid ""
-"If you use prefix in Booster, please make sure it contains only numbers and "
-"dash(es)! For example: 2021-"
 msgstr ""
 
 #: includes/class-wsb-hub3-validator.php:97
@@ -240,15 +238,15 @@ msgstr ""
 msgid "Large barcode only"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:404
+#: admin/class-wsb-hub3-admin.php:391
 msgid "mmyy"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:403
+#: admin/class-wsb-hub3-admin.php:390
 msgid "mmyyyy"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:357 public/class-wsb-hub3-public.php:478
+#: admin/class-wsb-hub3-admin.php:357 public/class-wsb-hub3-public.php:499
 msgid "Model"
 msgstr ""
 
@@ -264,7 +262,7 @@ msgstr ""
 msgid "Name is not valid"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:414 admin/class-wsb-hub3-admin.php:423
+#: admin/class-wsb-hub3-admin.php:401 admin/class-wsb-hub3-admin.php:410
 msgid "Numeric value up to 6 digits"
 msgstr ""
 
@@ -280,15 +278,7 @@ msgstr ""
 msgid "Order details page display prameter is not valid"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:381
-msgid "Order nr."
-msgstr ""
-
-#: admin/class-wsb-hub3-admin.php:388
-msgid "Order number by Booster for WooCommerce"
-msgstr ""
-
-#: admin/class-wsb-hub3-admin.php:444
+#: admin/class-wsb-hub3-admin.php:431
 msgid "Order payment"
 msgstr ""
 
@@ -320,11 +310,11 @@ msgstr ""
 msgid "Payment description text contains invalid characters"
 msgstr ""
 
-#: public/class-wsb-hub3-public.php:472
+#: public/class-wsb-hub3-public.php:493
 msgid "Payment details"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:443
+#: admin/class-wsb-hub3-admin.php:430
 msgid "Payment for Order [order]"
 msgstr ""
 
@@ -332,11 +322,11 @@ msgstr ""
 msgid "Payment model (2 digits)"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:432
+#: admin/class-wsb-hub3-admin.php:419
 msgid "Payment purpose code. Format: 4 capital letters."
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:711
+#: admin/class-wsb-hub3-admin.php:692
 msgid "Please save your HUB3 recipient settings!"
 msgstr ""
 
@@ -356,7 +346,7 @@ msgstr ""
 msgid "Postcode is not valid"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:430 public/class-wsb-hub3-public.php:482
+#: admin/class-wsb-hub3-admin.php:417 public/class-wsb-hub3-public.php:503
 msgid "Purpose code"
 msgstr ""
 
@@ -364,8 +354,8 @@ msgstr ""
 msgid "Purpose is not valid"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:316 admin/class-wsb-hub3-admin.php:483
-#: public/class-wsb-hub3-public.php:474
+#: admin/class-wsb-hub3-admin.php:316 admin/class-wsb-hub3-admin.php:470
+#: public/class-wsb-hub3-public.php:495
 msgid "Recipient"
 msgstr ""
 
@@ -389,7 +379,7 @@ msgstr ""
 msgid "Recipient postcode (5 digits)"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:366 public/class-wsb-hub3-public.php:480
+#: admin/class-wsb-hub3-admin.php:366 public/class-wsb-hub3-public.php:501
 msgid "Reference"
 msgstr ""
 
@@ -397,7 +387,7 @@ msgstr ""
 msgid "Reference can not be empty"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:394
+#: admin/class-wsb-hub3-admin.php:381
 msgid "Reference date format"
 msgstr ""
 
@@ -425,7 +415,7 @@ msgstr ""
 msgid "Reference Order format is not valid"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:412
+#: admin/class-wsb-hub3-admin.php:399
 msgid "Reference prefix"
 msgstr ""
 
@@ -433,7 +423,7 @@ msgstr ""
 msgid "Reference prefix must be a numeric value and can hold up to 6 digits."
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:421
+#: admin/class-wsb-hub3-admin.php:408
 msgid "Reference sufix"
 msgstr ""
 
@@ -461,7 +451,7 @@ msgstr ""
 msgid "Send slip to admin"
 msgstr ""
 
-#: public/class-wsb-hub3-public.php:239 public/class-wsb-hub3-public.php:292
+#: public/class-wsb-hub3-public.php:283 public/class-wsb-hub3-public.php:336
 msgid "Show larger barcode"
 msgstr ""
 
@@ -471,10 +461,6 @@ msgstr ""
 
 #: admin/class-wsb-hub3-admin.php:155
 msgid "Show on thankyou page"
-msgstr ""
-
-#: admin/class-wsb-hub3-admin.php:387
-msgid "Standard Order ID"
 msgstr ""
 
 #: admin/class-wsb-hub3-admin.php:147
@@ -525,14 +511,14 @@ msgstr ""
 msgid "WSB HUB3 requires WooCommerce to be installed and active."
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:441
+#: admin/class-wsb-hub3-admin.php:428
 msgid "You can use placeholder for Order ID: [order]"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:406
+#: admin/class-wsb-hub3-admin.php:393
 msgid "yy"
 msgstr ""
 
-#: admin/class-wsb-hub3-admin.php:405
+#: admin/class-wsb-hub3-admin.php:392
 msgid "yyyy"
 msgstr ""
