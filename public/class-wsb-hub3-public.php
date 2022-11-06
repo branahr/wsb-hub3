@@ -680,7 +680,7 @@ class Wsb_Hub3_Public {
 			$description = woocommerce_form_field('wsb_barcode_iban', array(
 					'type'          => 'select',
 					'class'         => array('barcode-iban-class form-row-wide'),
-					'label'         => __('Bank account', 'wsb-hub3'),
+					'label'         => __('Account to pay', 'wsb-hub3'),
 					'required'      => true,
 					'options'       => $accounts,
 				),'');
