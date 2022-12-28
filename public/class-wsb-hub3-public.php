@@ -203,7 +203,7 @@ class Wsb_Hub3_Public {
 		$hubparams['options']['scale'] = 3;
 		$hubparams['options']['ratio'] = 3;
 		
-		$hubparams['data']['amount'] = (int) $amount*100;
+		$hubparams['data']['amount'] = (int) ($amount*100);
 		$hubparams['data']['currency'] = get_woocommerce_currency();
 		$hubparams['data']['sender']['name'] = $sender_name;
 		$hubparams['data']['sender']['street'] = $sender_street;
@@ -669,6 +669,7 @@ class Wsb_Hub3_Public {
 	 */
 
 	function wsb_hub3_gateway_description( $description, $gateway_id ){
+		
 		if( 'bacs' === $gateway_id ) {
 				$payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
 				$accounts = array();
@@ -676,14 +677,19 @@ class Wsb_Hub3_Public {
 					if(empty($bank_account['iban'])) continue;
 					$accounts[$bank_account['iban']] = $bank_account['account_name'];
 				}
-				
-			$description = woocommerce_form_field('wsb_barcode_iban', array(
+			
+			if(!empty($accounts)){
+				$banks_dropdown = woocommerce_form_field('wsb_barcode_iban', array(
 					'type'          => 'select',
 					'class'         => array('barcode-iban-class form-row-wide'),
 					'label'         => __('Account to pay', 'wsb-hub3'),
 					'required'      => true,
 					'options'       => $accounts,
-				),'');
+				), '');
+				return $banks_dropdown;
+			} else {
+				return $description;
+			}
 		}
 
 		return $description;
