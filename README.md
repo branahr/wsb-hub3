@@ -13,7 +13,9 @@ WSB HUB3 je dodatak za WooCommerce koji prikazuje sve potrebne podatke za uplatu
 
 ## Dokumentacija
 
-Službena dokumentacija nalazi se na stranici https://www.webstudiobrana.com/hr/wsb-hub3-generator
+Dokumentacija i detaljnije upute nalaze se na stranici https://www.webstudiobrana.com/hr/wsb-hub3-generator
+
+Službena stranica plugina na WordPress repozitoriju: https://hr.wordpress.org/plugins/wsb-hub3/
 
 ## Značajke:
 
