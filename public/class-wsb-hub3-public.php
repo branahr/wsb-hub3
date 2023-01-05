@@ -113,21 +113,13 @@ class Wsb_Hub3_Public {
 		$url = "https://hub3.bigfish.software/api/v2/barcode";
 
 		if(!$receiver_iban) $receiver_iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
-		// $payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
-		// $accounts = array();
-		// foreach($payment_method->account_details as $bank_account){
-		// 	if(empty($bank_account['iban'])) continue;
-		// 	if($bank_account['iban'] == get_option( 'wsb_barcode_iban' )){
-		// 		$receiver_iban = $bank_account['iban'];
-		// 		break;
-		// 	}
-		// }
 
 		$img_type = get_option( 'wc_wsb_hub3_admin_tab_img_type', 'png' );
 		$img_padding = get_option( 'wsb_hub3_img_padding', '10' );
 		$img_color = get_option( 'wsb_hub3_img_color', '#000000' );
 		$amount = (float)$order->get_total();
-		$palatali = array("Č", "č", "Ć", "ć", "Ž", "ž", "Š", "š", "Đ", "đ");
+		$barcode_amount = number_format( $amount *= 100, 0, '', '' );
+		//$palatali = array("Č", "č", "Ć", "ć", "Ž", "ž", "Š", "š", "Đ", "đ");
 
         $name_max_chars = 30;
 		$street_max_chars = 27;	
@@ -138,31 +130,21 @@ class Wsb_Hub3_Public {
 
 		$r1_checkbox = get_post_meta( $order_id, 'R1 račun', true );
 		if( !empty( $r1_checkbox ) ){
-			$sender_name = esc_html(get_post_meta( $order_id, 'Ime tvrtke', true ));
+			$sender_name = get_post_meta( $order_id, 'Ime tvrtke', true );
 			$sender_street = esc_html(get_post_meta( $order_id, 'Adresa tvrtke', true ));
 		} else {
 			$company = $order->get_billing_company();
 			if(!empty($company)){
-				$sender_name = esc_html($company);
+				$sender_name = $company;
 			} 
 		}
 		
 		$name_length = strlen($sender_name);
-		$broj_palatala_name = 0;
-		foreach($palatali as $val){
-			$broj_palatala_name += substr_count($sender_name,$val);
-		}
-		$name_max_chars -= $broj_palatala_name;
 		if($name_length > $name_max_chars){
 			$sender_name = substr($sender_name, 0, $name_max_chars);
 		}
 
 		$street_length = strlen($sender_street);
-		$broj_palatala_street = 0;
-		foreach($palatali as $val){
-			$broj_palatala_street += substr_count($sender_street,$val);
-		}
-		$street_max_chars -= $broj_palatala_street;
 		if($street_length > $street_max_chars){
 			$sender_street = substr($sender_street, 0, $street_max_chars);
 		}
@@ -172,11 +154,6 @@ class Wsb_Hub3_Public {
 		$sender_city = $data['billing_city'];
 		$sender_place = $sender_postcode . " " . $sender_city;
 		$place_length = strlen($sender_place);
-		$broj_palatala_place = 0;
-		foreach($palatali as $val){
-			$broj_palatala_place += substr_count($sender_place,$val);
-		}
-		$place_max_chars -= $broj_palatala_place;
 		if($place_length > $place_max_chars){
 			$sender_place = substr($sender_place, 0, $place_max_chars);
 		}
@@ -203,7 +180,7 @@ class Wsb_Hub3_Public {
 		$hubparams['options']['scale'] = 3;
 		$hubparams['options']['ratio'] = 3;
 		
-		$hubparams['data']['amount'] = (int) ($amount*100);
+		$hubparams['data']['amount'] = (int) $barcode_amount;
 		$hubparams['data']['currency'] = get_woocommerce_currency();
 		$hubparams['data']['sender']['name'] = $sender_name;
 		$hubparams['data']['sender']['street'] = $sender_street;
@@ -232,7 +209,7 @@ class Wsb_Hub3_Public {
 		fclose($barcode_image);
 
 		$order->update_meta_data( '_wsb_hub3_barcode', 'barcode_' . $order_id . '.' . $img_type);
-		$order->update_meta_data( '_wsb_sender_name', $sender_name);
+		$order->update_meta_data( '_wsb_sender_name', sanitize_text_field($sender_name));
 		$order->save();
 
 		$hub3_image = $this->create_hub3($order_id);
@@ -512,7 +489,7 @@ class Wsb_Hub3_Public {
 
 		$order = wc_get_order( $order_id );
 		$order_number = $order->get_order_number();
-		$recipient = esc_html(get_option( 'wsb_hub3_receiver_name' ));
+		$recipient = get_option( 'wsb_hub3_receiver_name' );
 		$recipient_address = esc_html(get_option( 'wsb_hub3_receiver_address' ));
 		$recipient_place = esc_html(get_option( 'wsb_hub3_receiver_postcode' ) . " " . get_option( 'wsb_hub3_receiver_city' ));
 		$iban = get_post_meta( $order_id, '_wsb_barcode_iban', true );

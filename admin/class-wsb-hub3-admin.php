@@ -500,13 +500,13 @@ class Wsb_Hub3_Admin {
 		$receiver_settings = $this->wsb_hub3_receiver_settings();
 
 		if (isset($_POST['wsb_hub3_receiver_name'])) {
-			$name = $this->validator->is_valid_name(sanitize_text_field($_POST['wsb_hub3_receiver_name']));
+			$name = $this->validator->is_valid_receiver_name(sanitize_text_field($_POST['wsb_hub3_receiver_name']));
 			if(!$name) {
 				unset($receiver_settings['wsb_hub3_receiver_name']);
 			}
 		}
 		if (isset($_POST['wsb_hub3_receiver_address'])) {
-			$address = $this->validator->is_valid_address(sanitize_text_field($_POST['wsb_hub3_receiver_address']));
+			$address = $this->validator->is_valid_receiver_address(sanitize_text_field($_POST['wsb_hub3_receiver_address']));
 			if(!$address) {
 				unset($receiver_settings['wsb_hub3_receiver_address']);
 			}

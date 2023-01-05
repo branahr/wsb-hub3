@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 6.1
 Requires PHP: 5.6
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,7 +26,7 @@ If admin updates an order from the backend (i.e. adds a new product to the order
 - Wordpress version 5.0 and above
 - Woocommerce plugin installed and enabled (v 4.0 or greater)
 - Direct Bank Transfer payment plugin (BACS) enabled
-- HRK or EUR as a default payment currency
+- EUR as a default payment currency
 
 ### Documentation ###
 
@@ -91,6 +91,12 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 2.0.3 =
+* Fix: 1 cent rounding error after conversion to EUR
+* Enhancement: validation improved and adapted to https://hub3.bigfish.software/ API 
+* Enhancement: company name and receiver name can now contain "&" character
+* Enhancement: slip template size in KB reduced
 
 = 2.0.2 =
 * Fix: Payment short description not shown

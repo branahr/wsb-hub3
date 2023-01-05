@@ -33,7 +33,22 @@ class Wsb_Hub3_Validator {
 
 	}
 
-	
+	/**
+	 * Validate receiver name.
+	 * @since    2.0.3
+	 */
+	function is_valid_receiver_name($name) 
+	{
+		if (empty($name)) {
+			$this->notices[] = array( 'message' => __( 'Name can not be empty', 'wsb-hub3' ), 'type' => 'error' );
+			return false;
+		}
+		if (!preg_match("/^[0-9A-Za-z .,\-()_ĐŠŽĆČđšžćč&]{2,25}$/", $name)) {
+			$this->notices[] = array( 'message' => __( 'Name is not valid', 'wsb-hub3' ), 'type' => 'error' );
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Validate recipient name.
@@ -45,8 +60,25 @@ class Wsb_Hub3_Validator {
 			$this->notices[] = array( 'message' => __( 'Name can not be empty', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
-		if (!preg_match("/^[0-9A-Za-z .,\-()_ĐŠŽĆČđšžćč]{2,30}$/", $name)) {
+		if (!preg_match("/^[0-9A-Za-z .,\-()_ĐŠŽĆČđšžćč&]{2,30}$/", $name)) {
 			$this->notices[] = array( 'message' => __( 'Name is not valid', 'wsb-hub3' ), 'type' => 'error' );
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Validate receiver address.
+	 * @since    2.0.3
+	 */
+	function is_valid_receiver_address($address) 
+	{
+		if (empty($address)) {
+			$this->notices[] = array( 'message' => __( 'Address can not be empty', 'wsb-hub3' ), 'type' => 'error' );
+			return false;
+		}
+		if (!preg_match("/^[0-9A-Za-z \/\-.,()ĐŠŽĆČđšžćč]{4,25}$/", $address)) {
+			$this->notices[] = array( 'message' => __( 'Address is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
 		return true;
