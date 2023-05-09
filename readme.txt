@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,10 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 2.0.5 =
+* Fix: warning in BACS foreach loop
+* Enhancement: Show/Hide list of bank accounts on thankyou page
 
 = 2.0.4 =
 * Fix: warning in BACS foreach loop

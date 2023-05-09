@@ -219,8 +219,13 @@ class Wsb_Hub3_Public {
 		}
 	}
 
-	function wsb_remove_bank_details(){
-		return false;
+	function wsb_remove_bank_details($accounts, $order_id){
+		$show_accounts = get_option( 'wsb_hub3_bank_accounts_display', 'no' );
+		if('no' == $show_accounts){
+			return array();
+		} else {
+			return $accounts;
+		}
 	}
 
 	function wsb_hub3_barcode_thankyou($order_id){

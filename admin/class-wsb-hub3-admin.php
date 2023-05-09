@@ -135,6 +135,13 @@ class Wsb_Hub3_Admin {
 					'id'		  =>'wsb_hub3_order_status',
 					'desc_tip'    => true,
 				),
+				'wsb_hub3_bank_accounts_display' => array(
+                    'name'    => __( 'Show bank accounts', 'wsb-hub3' ),
+                    'type'    => 'checkbox',
+                    'default' => 'no',
+                    'desc'    => __( 'Show the list of BACS bank accounts on thankyou page', 'wsb-hub3' ),
+                    'id'      => 'wsb_hub3_bank_accounts_display',
+				),
 				'wsb_hub3_description_text' => array(
                     'name'        => __( 'Text above payment details', 'wsb-hub3' ),
                     'type'        => 'textarea',
@@ -673,6 +680,12 @@ class Wsb_Hub3_Admin {
 			$admin_slip = $this->validator->is_valid_checkbox(sanitize_text_field($_POST['wsb_hub3_croatian_customers_only']));
 			if(!$admin_slip) {
 				unset($general_settings['wsb_hub3_croatian_customers_only']);
+			}
+		}
+		if (isset($_POST['wsb_hub3_bank_accounts_display'])) {
+			$show_accounts = $this->validator->is_valid_checkbox(sanitize_text_field($_POST['wsb_hub3_bank_accounts_display']));
+			if(!$show_accounts) {
+				unset($general_settings['wsb_hub3_bank_accounts_display']);
 			}
 		}
 		if (isset($_POST['wsb_hub3_send_admin_barcode'])) {
