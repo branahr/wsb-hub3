@@ -1,0 +1,553 @@
+msgid ""
+msgstr ""
+"Language: hr\n"
+"POT-Creation-Date: 2020-05-15 07:27+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
+"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2;\n"
+"PO-Revision-Date: 2023-05-09 07:26+0000\n"
+"X-Generator: Loco https://localise.biz/\n"
+"Project-Id-Version: Plugins - WSB HUB3 - Stable (latest release)\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: Hrvatski\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Version: 2.3.4; wp-5.4.2-alpha-47791"
+
+#: public/class-wsb-hub3-public.php:667
+msgid "Account to pay"
+msgstr "Uplata na račun"
+
+#: admin/class-wsb-hub3-admin.php:331
+msgid "Address"
+msgstr "Adresa"
+
+#: includes/class-wsb-hub3-validator.php:77
+#: includes/class-wsb-hub3-validator.php:94
+msgid "Address can not be empty"
+msgstr "Adresa ne smije biti prazna"
+
+#: includes/class-wsb-hub3-validator.php:81
+#: includes/class-wsb-hub3-validator.php:98
+msgid "Address is not valid"
+msgstr "Adresa nije ispravna"
+
+#: public/class-wsb-hub3-public.php:478
+msgid "Amount"
+msgstr "Iznos"
+
+#: admin/class-wsb-hub3-admin.php:478
+msgid "Barcode"
+msgstr "Barkod"
+
+#: admin/class-wsb-hub3-admin.php:299
+msgid "Barcode color"
+msgstr "Boja barkoda."
+
+#: admin/class-wsb-hub3-admin.php:255
+msgid "Barcode image type"
+msgstr "Vrsta datoteke za barcode"
+
+#: admin/class-wsb-hub3-admin.php:289
+msgid "Barcode padding in pixels"
+msgstr "Padding (razmak barkoda od ruba slike)"
+
+#. Description of the plugin
+msgid "Barcode payment details plugin for Woocommerce (for Croatian banks)"
+msgstr "HUB3 barkod plugin za Woocommerce (za hrvatske banke)"
+
+#: admin/class-wsb-hub3-admin.php:248
+msgid "Barcode settings"
+msgstr "Postavke barkoda"
+
+#: includes/class-wsb-hub3-validator.php:395
+msgid "Barcode text contains invalid characters"
+msgstr "Opisni tekst za barkod sadrži nedozvoljene znakove"
+
+#: admin/class-wsb-hub3-admin.php:271
+msgid "Barcode width in pixels"
+msgstr "Širina barkoda u pikselima"
+
+#. Author of the plugin
+msgid "Branko Borilovic"
+msgstr "Branko Borilović"
+
+#: includes/class-wsb-hub3-validator.php:434
+msgid "Checkbox value is not valid."
+msgstr "Vrijednost kućice za označavanje nije valjana"
+
+#: admin/class-wsb-hub3-admin.php:348
+msgid "City"
+msgstr "Mjesto"
+
+#: includes/class-wsb-hub3-validator.php:142
+msgid "City can not be empty"
+msgstr "Mjesto ne može biti prazno"
+
+#: includes/class-wsb-hub3-validator.php:146
+msgid "City is not valid"
+msgstr "Mjesto nije valjano"
+
+#: admin/class-wsb-hub3-admin.php:296
+msgid "Color"
+msgstr "Boja"
+
+#: admin/class-wsb-hub3-admin.php:391
+msgid "d:day, m:month, y:year"
+msgstr "d:dan, m:mjesec, g:godina"
+
+#: admin/class-wsb-hub3-admin.php:132
+msgid "Data will be shown only on this order status."
+msgstr "Podatci za uplatu bit će prikazani samo kod ovog statusa narudžbe"
+
+#: admin/class-wsb-hub3-admin.php:380
+msgid "Date"
+msgstr "Datum"
+
+#: admin/class-wsb-hub3-admin.php:382
+msgid "Date-Order"
+msgstr "Datum-Narudžba"
+
+#: admin/class-wsb-hub3-admin.php:396
+msgid "ddmm"
+msgstr "ddmm"
+
+#: admin/class-wsb-hub3-admin.php:395
+msgid "ddmmyy"
+msgstr "ddmmgg"
+
+#: admin/class-wsb-hub3-admin.php:394
+msgid "ddmmyyyy"
+msgstr "ddmmgggg"
+
+#: admin/class-wsb-hub3-admin.php:433 public/class-wsb-hub3-public.php:487
+msgid "Description"
+msgstr "Opis plaćanja"
+
+#: includes/class-wsb-hub3-validator.php:258
+msgid "Description can not be empty"
+msgstr "Opis ne može biti prazan."
+
+#: includes/class-wsb-hub3-validator.php:262
+msgid "Description too long or contains invalid characters"
+msgstr "Opis je predugačak ili sadrži nedozvoljene znakove."
+
+#: includes/class-wsb-hub3-validator.php:343
+msgid "Display in email can not be empty"
+msgstr "Prikaz u emailu ne može biti porazan"
+
+#: includes/class-wsb-hub3-validator.php:347
+msgid "Display in email is not valid"
+msgstr "Prikaz u emailu nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:125
+msgid "Enable only for customers with Croatian billing address"
+msgstr "Uključiti samo za kupce s adresom u Hrvatskoj."
+
+#: includes/class-wsb-hub3-shortcodes.php:71
+#: public/class-wsb-hub3-public.php:262 public/class-wsb-hub3-public.php:315
+msgid "Enlarge (New window)"
+msgstr "Uvećaj (Novi prozor)"
+
+#: admin/class-wsb-hub3-admin.php:122
+msgid "For Croatian customers only"
+msgstr "Samo za hrvatske kupce"
+
+#: admin/class-wsb-hub3-admin.php:258
+msgid "For large barcode only"
+msgstr ""
+"Samo za veliki barkod (uplatnica s malim barkodom je uvijek u jpg formatu)"
+
+#: admin/class-wsb-hub3-admin.php:115 admin/class-wsb-hub3-admin.php:476
+msgid "General settings"
+msgstr "Opće postavke"
+
+#: admin/class-wsb-hub3-admin.php:263
+msgid "GIF"
+msgstr "GIF"
+
+#: admin/class-wsb-hub3-admin.php:168 admin/class-wsb-hub3-admin.php:182
+#: admin/class-wsb-hub3-admin.php:196
+msgid "Html text + large barcode"
+msgstr "HTML tekst + uvećani barkod"
+
+#. Author URI of the plugin
+msgid "https://profiles.wordpress.org/branahr"
+msgstr "https://profiles.wordpress.org/branahr"
+
+#. URI of the plugin
+msgid "https://www.webstudiobrana.com/wsb-hub3"
+msgstr "https://www.webstudiobrana.com/wsb-hub3"
+
+#: admin/class-wsb-hub3-admin.php:169 admin/class-wsb-hub3-admin.php:183
+#: admin/class-wsb-hub3-admin.php:197
+msgid "HUB-3A slip + large barcode"
+msgstr "HUB-3A popunjena uplatnica + uvećani barkod"
+
+#: admin/class-wsb-hub3-admin.php:218
+msgid "HUB-3A slip width"
+msgstr "Širina uplatnice"
+
+#: admin/class-wsb-hub3-admin.php:227
+msgid "HUB-3A slip width in email"
+msgstr "Širina uplatnice u emailu"
+
+#: admin/class-wsb-hub3-admin.php:220
+msgid "HUB-3A slip width in pixels"
+msgstr "Širina uplatnice prikazane u mailu i detaljima narudžbe (u pikselima)"
+
+#: admin/class-wsb-hub3-admin.php:92
+msgid "HUB3"
+msgstr "HUB3"
+
+#: admin/class-wsb-hub3-admin.php:721
+msgid ""
+"HUB3 plugin works only if \"Direct bank transfer\" payment method is active!"
+msgstr ""
+"HUB3 dodatak radi jedino ako je uključena metoda plaćanja \"Direktna "
+"bankovna transakcija\"."
+
+#: admin/class-wsb-hub3-admin.php:710
+#| msgid "HUB3 plugin works properly only with HRK as default currency!"
+msgid "HUB3 plugin works properly only with HRK or EUR as a default currency!"
+msgstr ""
+"HUB3 dodatak radit će ispravno samo ako je zadana valuta trgovine HRK ili "
+"EUR!"
+
+#: admin/class-wsb-hub3-admin.php:356 admin/class-wsb-hub3-admin.php:358
+#: public/class-wsb-hub3-public.php:479
+msgid "IBAN"
+msgstr "IBAN"
+
+#: includes/class-wsb-hub3-validator.php:189
+msgid "IBAN can not be empty"
+msgstr "IBAN ne smije biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:193
+msgid "IBAN is not valid"
+msgstr "IBAN nije valjan"
+
+#: includes/class-wsb-hub3-validator.php:129
+msgid "Image color is not valid"
+msgstr "Boja slike nije u valjanom formatu"
+
+#: includes/class-wsb-hub3-validator.php:111
+msgid "Image type can not be empty"
+msgstr "Vrsta slike ne može biti prazna"
+
+#: includes/class-wsb-hub3-validator.php:116
+msgid "Image type is not valid"
+msgstr "Vrsta slike nije ispravna"
+
+#: includes/class-wsb-hub3-validator.php:421
+msgid "Image width must be a numeric value (2 - 4 digits)."
+msgstr "Širina slike mora biti numerička vrijednost (2-4 znamenke)"
+
+#: admin/class-wsb-hub3-admin.php:261
+msgid "JPG"
+msgstr "JPG"
+
+#: admin/class-wsb-hub3-admin.php:170 admin/class-wsb-hub3-admin.php:184
+#: admin/class-wsb-hub3-admin.php:198
+msgid "Large barcode only"
+msgstr "Samo uvećani barkod"
+
+#: admin/class-wsb-hub3-admin.php:398
+msgid "mmyy"
+msgstr "mmgg"
+
+#: admin/class-wsb-hub3-admin.php:397
+msgid "mmyyyy"
+msgstr "mmgggg"
+
+#: admin/class-wsb-hub3-admin.php:364 public/class-wsb-hub3-public.php:481
+msgid "Model"
+msgstr "Model plaćanja"
+
+#: includes/class-wsb-hub3-validator.php:206
+msgid "Model is not valid"
+msgstr "Model nije valjan"
+
+#: includes/class-wsb-hub3-validator.php:43
+#: includes/class-wsb-hub3-validator.php:60
+msgid "Name can not be empty"
+msgstr "Naziv ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:47
+#: includes/class-wsb-hub3-validator.php:64
+msgid "Name is not valid"
+msgstr "Naziv nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:408 admin/class-wsb-hub3-admin.php:417
+msgid "Numeric value up to 6 digits"
+msgstr "Numerička vrijednost do 6 znamenki"
+
+#: admin/class-wsb-hub3-admin.php:379
+msgid "Order"
+msgstr "Narudžba"
+
+#: includes/class-wsb-hub3-validator.php:377
+msgid "Order details page display parameter can not be empty"
+msgstr "Parametar za prikaz na stranici narudžbe ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:381
+msgid "Order details page display prameter is not valid"
+msgstr "Parametar za prikaz na stranici narudžbe nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:438
+msgid "Order payment"
+msgstr "Plaćanje narudžbe"
+
+#: includes/class-wsb-hub3-validator.php:326
+msgid "Order status can not be empty"
+msgstr "Status narudžbe ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:330
+msgid "Order status is not valid"
+msgstr "Status narudžbe nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:129
+msgid "Order Status to display data"
+msgstr "Uključeno za status"
+
+#: admin/class-wsb-hub3-admin.php:381
+msgid "Order-Date"
+msgstr "Narudžba-Datum"
+
+#: admin/class-wsb-hub3-admin.php:287
+msgid "Padding"
+msgstr "Padding"
+
+#: includes/class-wsb-hub3-validator.php:176
+msgid "Padding value is not valid"
+msgstr "Vrijednost za padding nije ispravna."
+
+#: includes/class-wsb-hub3-validator.php:408
+msgid "Payment description text contains invalid characters"
+msgstr "Opisni tekst plaćanja sadrži nedozvoljene znakove"
+
+#: public/class-wsb-hub3-public.php:475
+msgid "Payment details"
+msgstr "Podatci za plaćanje"
+
+#: admin/class-wsb-hub3-admin.php:437
+msgid "Payment for Order [order]"
+msgstr "Plaćanje narudžbe br. [order]"
+
+#: admin/class-wsb-hub3-admin.php:366
+msgid "Payment model (2 digits)"
+msgstr "Model plaćanja (2 znamenke)"
+
+#: admin/class-wsb-hub3-admin.php:426
+msgid "Payment purpose code. Format: 4 capital letters."
+msgstr "Šifra namjene. Format: 4 velika slova."
+
+#: admin/class-wsb-hub3-admin.php:705
+msgid "Please save your HUB3 recipient settings!"
+msgstr "Spremite podatke o primatelju za HUB3 dodatak!"
+
+#: admin/class-wsb-hub3-admin.php:262
+msgid "PNG"
+msgstr "PNG"
+
+#: admin/class-wsb-hub3-admin.php:339
+msgid "Postcode"
+msgstr "Broj pošte"
+
+#: includes/class-wsb-hub3-validator.php:159
+msgid "Postcode can not be empty"
+msgstr "Broj pošte ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:163
+msgid "Postcode is not valid"
+msgstr "Broj pošte nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:424 public/class-wsb-hub3-public.php:485
+msgid "Purpose code"
+msgstr "Šifra namjene"
+
+#: includes/class-wsb-hub3-validator.php:219
+msgid "Purpose is not valid"
+msgstr "Šifra namjene nije valjana"
+
+#: admin/class-wsb-hub3-admin.php:323 admin/class-wsb-hub3-admin.php:477
+#: public/class-wsb-hub3-public.php:477
+msgid "Recipient"
+msgstr "Primatelj"
+
+#: admin/class-wsb-hub3-admin.php:333
+msgid "Recipient address"
+msgstr "Adresa primatelja"
+
+#: admin/class-wsb-hub3-admin.php:350
+msgid "Recipient city"
+msgstr "Mjesto primatelja"
+
+#: admin/class-wsb-hub3-admin.php:317
+msgid "Recipient details"
+msgstr "Podatci o primatelju"
+
+#: admin/class-wsb-hub3-admin.php:325
+msgid "Recipient name"
+msgstr "Naziv / Ime primatelja"
+
+#: admin/class-wsb-hub3-admin.php:341
+msgid "Recipient postcode (5 digits)"
+msgstr "Poštanski broj primatelja (5 znamenki)"
+
+#: admin/class-wsb-hub3-admin.php:373 public/class-wsb-hub3-public.php:483
+msgid "Reference"
+msgstr "Poziv na broj"
+
+#: includes/class-wsb-hub3-validator.php:275
+msgid "Reference can not be empty"
+msgstr "Poziv na broj primatelja ne može biti prazan"
+
+#: admin/class-wsb-hub3-admin.php:388
+msgid "Reference date format"
+msgstr "Oblik datuma u pozivu na broj"
+
+#: includes/class-wsb-hub3-validator.php:309
+msgid "Reference date format can not be empty"
+msgstr "Format datuma za poziv na broj ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:313
+msgid "Reference date format is not valid"
+msgstr "Format datuma za poziv na broj nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:376
+msgid "Reference format"
+msgstr "Poziv na broj"
+
+#: includes/class-wsb-hub3-validator.php:279
+msgid "Reference is not valid"
+msgstr "Poziv na broj primatelja nije valjan"
+
+#: includes/class-wsb-hub3-validator.php:292
+msgid "Reference order can not be empty"
+msgstr "Poziv na broj nemože biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:296
+msgid "Reference Order format is not valid"
+msgstr "Format poziva na broj nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:406
+msgid "Reference prefix"
+msgstr "Prefiks poziva na broj"
+
+#: includes/class-wsb-hub3-validator.php:232
+msgid "Reference prefix must be a numeric value and can hold up to 6 digits."
+msgstr "Prefiks poziva na broj mora imati numeričku vrijednost do 6 znamenki."
+
+#: admin/class-wsb-hub3-admin.php:415
+msgid "Reference sufix"
+msgstr "Sufiks poziva na broj"
+
+#: includes/class-wsb-hub3-validator.php:245
+msgid "Reference sufix must be a numeric value and can hold up to 6 digits."
+msgstr "Sufiks poziva na broj mora imati numeričku vrijednost do 6 znamenki."
+
+#: admin/class-wsb-hub3-admin.php:211
+msgid "Send barcode to admin"
+msgstr "Pošalji barkod administratoru"
+
+#: admin/class-wsb-hub3-admin.php:214
+msgid "Send barcode to admin in email"
+msgstr "Pošalji barkod i administratoru na email"
+
+#: admin/class-wsb-hub3-admin.php:207
+msgid "Send HUB-3A slip to admin in email"
+msgstr "Pošalji kopiju uplatnice i administratoru na email"
+
+#: admin/class-wsb-hub3-admin.php:190
+msgid "Send in email"
+msgstr "Pošalji u obavijesnom emailu"
+
+#: admin/class-wsb-hub3-admin.php:204
+msgid "Send slip to admin"
+msgstr "Pošalji uplatnicu administratoru"
+
+#: admin/class-wsb-hub3-admin.php:139
+msgid "Show bank accounts"
+msgstr "Prikaži račune na stranici zahvale"
+
+#: public/class-wsb-hub3-public.php:265 public/class-wsb-hub3-public.php:318
+msgid "Show larger barcode"
+msgstr "Prikaži uvećani barkod"
+
+#: admin/class-wsb-hub3-admin.php:176
+msgid "Show on order details page"
+msgstr "Prikaži na stranici detalja narudžbe"
+
+#: admin/class-wsb-hub3-admin.php:162
+msgid "Show on thankyou page"
+msgstr "Prikaži na stranici zahvale"
+
+#: admin/class-wsb-hub3-admin.php:142
+msgid "Show the list of BACS bank accounts on thankyou page"
+msgstr ""
+"Omogući na stranici zahvale prikaz svih bankovnih računa upisanih u \"BACS\" "
+"metodu plaćanja."
+
+#: admin/class-wsb-hub3-admin.php:154
+msgid "Text above barcode"
+msgstr "Tekst iznad barkoda"
+
+#: admin/class-wsb-hub3-admin.php:146
+msgid "Text above payment details"
+msgstr "Tekst iznad podataka za plaćanje"
+
+#: admin/class-wsb-hub3-admin.php:156
+msgid "Text to be shown above barcode"
+msgstr "Tekst koji će biti prikazan iznad barkoda."
+
+#: admin/class-wsb-hub3-admin.php:148
+msgid "Text to be shown above payment details"
+msgstr ""
+"Opisni tekst koji će biti prikazan kupcu iznad podataka za plaćanje (na "
+"stranici zahvale i u detaljima narudžbe)."
+
+#: includes/class-wsb-hub3-validator.php:360
+msgid "Thank you page display parameter can not be empty"
+msgstr "Parametar za prikaz na stranici zahvale ne može biti prazan"
+
+#: includes/class-wsb-hub3-validator.php:364
+msgid "Thank you page display prameter is not valid"
+msgstr "Parametar za prikaz na stranici zahvale nije valjan"
+
+#: admin/class-wsb-hub3-admin.php:278
+msgid "Width (email)"
+msgstr "Širina (email)"
+
+#: admin/class-wsb-hub3-admin.php:269
+msgid "Width (website)"
+msgstr "Širina (web stranica)"
+
+#: admin/class-wsb-hub3-admin.php:280
+msgid "Width in pixels of barcode sent in email"
+msgstr "Širina barkoda (u pikselima) poslanog emailom"
+
+#: admin/class-wsb-hub3-admin.php:229
+msgid "Width in pixels of HUB-3A slip sent in email "
+msgstr "Širina uplatnice (u pikselima) poslane u emailu"
+
+#. Name of the plugin
+msgid "WSB HUB3"
+msgstr "WSB HUB3"
+
+#: wsb-hub3.php:88
+msgid "WSB HUB3 requires WooCommerce to be installed and active."
+msgstr "WSB HUB3 ne može raditi ako WooCommerce nije instaliran i aktivan."
+
+#: admin/class-wsb-hub3-admin.php:435
+msgid "You can use placeholder for Order ID: [order]"
+msgstr "Za broj narudžbe možete koristiti [order]"
+
+#: admin/class-wsb-hub3-admin.php:400
+msgid "yy"
+msgstr "gg"
+
+#: admin/class-wsb-hub3-admin.php:399
+msgid "yyyy"
+msgstr "gggg"
