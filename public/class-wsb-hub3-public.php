@@ -575,7 +575,6 @@ class Wsb_Hub3_Public {
 		$total = esc_html( "=" . number_format($order->get_total(),2,"",""));
 		$total2 = esc_html( $currency. " = " . number_format($order->get_total(),2,",",""));
 
-		$img_path = plugin_dir_url( __DIR__ ) . "barcodes/";
 		$hub3a = imagecreatefromjpeg(plugin_dir_path(__DIR__) . 'public/img/hub-3a.jpg');
 		$black = imagecolorallocate($hub3a, 0x30, 0x30, 0x30);
 		$font_roboto = plugin_dir_path( __DIR__ ) . 'public/fonts/RobotoMono-Regular.ttf';
@@ -627,8 +626,8 @@ class Wsb_Hub3_Public {
 		$x_iban2 = 1080 - $bbox_iban2[4];
 		$this->imagettftextWsb($hub3a, 12, 0, $x_iban2, 162, $black, $font_times, $iban);
 
-		//$img_path = plugin_dir_url( __DIR__ ) . "barcodes/";
-		$img_path = "/var/www/html/wp-content/plugins/wsb-hub3/barcodes/";
+		$img_path = rtrim(dirname(__DIR__), '/') . '/barcodes/';
+		
 		if ($this->hpos) {
 			$img_file = $order->get_meta('_wsb_hub3_barcode');
 		} else {
