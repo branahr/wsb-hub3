@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the core plugin class
  *
@@ -173,9 +172,9 @@ class Wsb_Hub3 {
 		$this->loader->add_action( 'woocommerce_view_order', $plugin_public, 'wsb_hub3_barcode_order_display', 20);
 		$this->loader->add_action( 'woocommerce_thankyou', $plugin_public, 'wsb_hub3_barcode_thankyou', 1 );
 		$this->loader->add_action( 'woocommerce_email_after_order_table', $plugin_public, 'wsb_hub3_email_after_order_table', 10, 4 );
-		$this->loader->add_action( 'save_post_shop_order', $plugin_public, 'wsb_hub3_admin_order_update', 10, 3 );
+		$this->loader->add_action( 'woocommerce_update_order', $plugin_public, 'wsb_hub3_admin_order_update', 25, 2 );
 		$this->loader->add_filter( 'woocommerce_gateway_description', $plugin_public, 'wsb_hub3_gateway_description', 25, 2 );
-		$this->loader->add_filter( 'woocommerce_bacs_account_fields', $plugin_public, 'wsb_remove_bank_details' );
+		$this->loader->add_filter( 'woocommerce_bacs_account_fields', $plugin_public, 'wsb_remove_bank_details', 10, 2 );
 	}
 
 	/**

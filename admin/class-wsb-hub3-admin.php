@@ -135,6 +135,13 @@ class Wsb_Hub3_Admin {
 					'id'		  =>'wsb_hub3_order_status',
 					'desc_tip'    => true,
 				),
+				'wsb_hub3_bank_accounts_display' => array(
+                    'name'    => __( 'Show bank accounts', 'wsb-hub3' ),
+                    'type'    => 'checkbox',
+                    'default' => 'no',
+                    'desc'    => __( 'Show the list of BACS bank accounts on thankyou page', 'wsb-hub3' ),
+                    'id'      => 'wsb_hub3_bank_accounts_display',
+				),
 				'wsb_hub3_description_text' => array(
                     'name'        => __( 'Text above payment details', 'wsb-hub3' ),
                     'type'        => 'textarea',
@@ -675,6 +682,12 @@ class Wsb_Hub3_Admin {
 				unset($general_settings['wsb_hub3_croatian_customers_only']);
 			}
 		}
+		if (isset($_POST['wsb_hub3_bank_accounts_display'])) {
+			$show_accounts = $this->validator->is_valid_checkbox(sanitize_text_field($_POST['wsb_hub3_bank_accounts_display']));
+			if(!$show_accounts) {
+				unset($general_settings['wsb_hub3_bank_accounts_display']);
+			}
+		}
 		if (isset($_POST['wsb_hub3_send_admin_barcode'])) {
 			$admin_barcode = $this->validator->is_valid_checkbox(sanitize_text_field($_POST['wsb_hub3_send_admin_barcode']));
 			if(!$admin_barcode) {
@@ -689,12 +702,12 @@ class Wsb_Hub3_Admin {
 	{
 		$recipient_name = get_option( 'wsb_hub3_receiver_name' );
 		if(!$recipient_name){
-			$this->validator->notices[] = array( 'message' => __( 'Please save your HUB3 recipient settings!', 'wsb-hub3' ), 'type' => 'warning' );
+			$this->validator->wsb_notices[] = array( 'message' => __( 'Please save your HUB3 recipient settings!', 'wsb-hub3' ), 'type' => 'warning' );
 		}
 		
 		$currency = get_woocommerce_currency();
 		if("HRK" != $currency && "EUR" != $currency){
-			$this->validator->notices[] = array( 'message' => __( 'HUB3 plugin works properly only with HRK or EUR as a default currency!', 'wsb-hub3' ), 'type' => 'error' );
+			$this->validator->wsb_notices[] = array( 'message' => __( 'HUB3 plugin works properly only with HRK or EUR as a default currency!', 'wsb-hub3' ), 'type' => 'error' );
 		}
 
 		$gateways = WC()->payment_gateways->get_available_payment_gateways();
@@ -705,10 +718,10 @@ class Wsb_Hub3_Admin {
 			}
 		}
 		if(!$bacs){
-			$this->validator->notices[] = array( 'message' => __( 'HUB3 plugin works only if "Direct bank transfer" payment method is active!', 'wsb-hub3' ), 'type' => 'warning' );
+			$this->validator->wsb_notices[] = array( 'message' => __( 'HUB3 plugin works only if "Direct bank transfer" payment method is active!', 'wsb-hub3' ), 'type' => 'warning' );
 		}
 		
-		foreach ($this->validator->notices as $notice) {
+		foreach ($this->validator->wsb_notices as $notice) {
 			echo '<div class="notice notice-' .esc_html($notice['type']). '"><p>' . esc_html($notice['message']) . '</p></div>';
 		}
 	}

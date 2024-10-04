@@ -1,4 +1,4 @@
-(function( $ ) {
-	'use strict';
-    $('.wsb-color-field').wpColorPicker();
-})( jQuery );
+;(function ($) {
+  'use strict'
+  $('.wsb-color-field').wpColorPicker()
+})(jQuery)

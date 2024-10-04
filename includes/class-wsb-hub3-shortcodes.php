@@ -66,7 +66,12 @@ class Wsb_Hub3_Shortcodes {
 				return;
 			}
 			$slip_width = $a['width'] . "px";
-				$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
+				if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+					$hub3_image = $order->get_meta('_wsb_hub3_slip');
+				} else {
+					$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
+				}
+				
 				if($hub3_image){
 					$html="<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' alt='HUB-3A' /></a></div>";
 				}
@@ -110,7 +115,11 @@ class Wsb_Hub3_Shortcodes {
 			if( 'bacs' != $payment_method || $status_to_display != $order_status) {
 				return;
 			}
-			$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
+			if (OrderUtil::custom_orders_table_usage_is_enabled()) {
+				$barcode_image = $order->get_meta('_wsb_hub3_barcode');
+			} else {
+				$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
+			}
 			$barcode_width = $a['width'] . "px";
 			if($barcode_image){
 				$html.="<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image ) ."' alt='barcode' /></p>";

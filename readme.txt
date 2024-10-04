@@ -3,9 +3,9 @@ Contributors: branahr
 Donate link: https://www.paypal.me/branahr
 Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
-Tested up to: 6.1
-Requires PHP: 5.6
-Stable tag: 2.0.3
+Tested up to: 6.6
+Requires PHP: 7.4
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,17 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 3.0.0 =
+* Enhancement: Compatibility with Woocommerce HPOS
+
+= 2.0.5 =
+* Fix: warning in BACS foreach loop
+* Enhancement: Show/Hide list of bank accounts on thankyou page
+
+= 2.0.4 =
+* Fix: warning in BACS foreach loop
+* Enhancement: WP 6.2 compatibility
 
 = 2.0.3 =
 * Fix: 1 cent rounding error after conversion to EUR
