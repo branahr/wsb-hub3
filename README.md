@@ -9,12 +9,12 @@ Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins
 
 ## Requirements
 
-    - PHP version 5.6 and above
-    - GD library installed on server
-    - Wordpress version 5.0 and above
-    - Woocommerce plugin installed and enabled (v 4.0 or greater)
-    - Direct Bank Transfer payment plugin (BACS) enabled
-    - EUR as a default payment currency
+- PHP version 5.6 and above
+- GD library installed on server
+- Wordpress version 5.0 and above
+- Woocommerce plugin installed and enabled (v 4.0 or greater)
+- Direct Bank Transfer payment plugin (BACS) enabled
+- EUR as a default payment currency
 
 ### Features
 
