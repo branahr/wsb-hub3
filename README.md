@@ -62,7 +62,7 @@ Also you can add sufix and/or prefix to the reference number (up to 6 digits for
 ### 3.0.0
 
 - Enhancement: Compatibility with Woocommerce HPOS
-- Fix:
+- Fix: GD compatibility
 
 ### 2.0.5
 
