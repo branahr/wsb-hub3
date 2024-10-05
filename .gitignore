@@ -1,0 +1,3 @@
+.wp-env.json
+barcodes/*
+!barcodes/index.php
