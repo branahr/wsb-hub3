@@ -15,7 +15,7 @@
  * Author:            Branko Borilovic
  * Author URI:        https://profiles.wordpress.org/branahr
  * WC requires at least: 7.1
- * WC tested up to: 	 9.2
+ * WC tested up to: 	 9.3
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wsb-hub3
