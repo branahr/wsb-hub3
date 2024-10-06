@@ -28,15 +28,10 @@ If admin updates an order from the backend (i.e. adds a new product to the order
 - Direct Bank Transfer payment plugin (BACS) enabled
 - EUR as a default payment currency
 
-### Documentation ###
-
-The official documentation is located at the [WSB HUB3 Documentation](https://www.webstudiobrana.com/wsb-hub3/) page.
-
-
 ### Features ###
 
 * Sequential order number plugins supported
-* Multiple IBANs (Bank accounts)
+* Multiple IBANs (Works only for standard checkout, not with BLOCKS!)
 * Selectable display options for payment details
 * JPG, PNG or GIF format can be selected for barcode image
 * Adjustable reference number pattern
@@ -77,7 +72,7 @@ option in the *Plugins* menu in WordPress.
 
 = Where can I find a detailed documentation =
 
-The official documentation is located at the [WSB HUB3 Documentation](https://www.webstudiobrana.com/wsb-hub3/) page.
+Documentation is located at the [WSB HUB3 Github page](https://github.com/branahr/wsb-hub3).
 
 = Where is the settings page? =
 
@@ -94,6 +89,7 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 
 = 3.0.0 =
 * Enhancement: Compatibility with Woocommerce HPOS
+* Fix: GD compatibility
 
 = 2.0.5 =
 * Fix: warning in BACS foreach loop
