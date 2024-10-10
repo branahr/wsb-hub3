@@ -5,6 +5,9 @@ Plugin uses [bigfish.software](https://hub3.bigfish.software]) API to generate b
 You can display payment details to the customer either in text/html format, or generated HUB-3A slip in jpg with all details on it.
 If admin updates an order from the backend (i.e. adds a new product to the order or apply a coupon code), barcode and HUB3 slip will be re-created.
 
+3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer will see the select list in frontend and can choose which one to use
+for payment. If only one IBAN, select list is not shown.
+
 Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins/wsb-hub3/)
 
 ## Requirements
@@ -58,6 +61,10 @@ Also you can add sufix and/or prefix to the reference number (up to 6 digits for
 3. Find _HUB3_ tab under Woocommerce settings for HUB3 options
 
 ## Changelog
+
+### 3.0.1
+
+- Fix: Payment description and IBAN select list in frontend
 
 ### 3.0.0
 

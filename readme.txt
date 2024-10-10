@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,8 @@ WSB HUB3 is a plugin for Woocommerce that shows all needed data for Croatian ban
 Plugin uses bigfish.software API to generate barcodes: https://hub3.bigfish.software/. 
 You can display payment details to the customer either in text/html format, or generated HUB-3A slip in jpg with all details on it. 
 If admin updates an order from the backend (i.e. adds a new product to the order or apply a coupon code), barcode and HUB3 slip will be re-created.
+
+3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer will see the select list in frontend and can choose which one to use for payment. If only one IBAN, select list is not shown.
 
 
 ### Requirements ###
@@ -86,6 +88,9 @@ Settings page is on a separate tab named *HUB3* under Woocommerce settings page.
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 3.0.1 =
+* Fix: Payment description and IBAN select list in frontend
 
 = 3.0.0 =
 * Enhancement: Compatibility with Woocommerce HPOS

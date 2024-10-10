@@ -11,7 +11,7 @@
  * Plugin Name:       WSB HUB3
  * Plugin URI:        https://www.webstudiobrana.com/wsb-hub3
  * Description:       Barcode payment details plugin for Woocommerce (for Croatian banks)
- * Version:           3.0.0
+ * Version:           3.0.1
  * Author:            Branko Borilovic
  * Author URI:        https://profiles.wordpress.org/branahr
  * WC requires at least: 7.1
@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'WSB_HUB3_VERSION', '3.0.0' );
+define( 'WSB_HUB3_VERSION', '3.0.1' );
 
 /**
  * The code that runs during plugin activation.
