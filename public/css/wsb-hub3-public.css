@@ -31,3 +31,6 @@
 #wsb_barcode_iban_field {
   padding: 0 1.5em 1.5em;
 }
+.hidden-field {
+  display: none;
+}

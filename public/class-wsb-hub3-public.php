@@ -718,30 +718,49 @@ class Wsb_Hub3_Public {
 	 * @since    2.0
 	 */
 
-	function wsb_hub3_gateway_description( $description, $gateway_id ){
-		if( 'bacs' === $gateway_id ) {
-				$payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
-				$accounts = array();
-				foreach($payment_method->account_details as $bank_account){
-					if(empty($bank_account['iban'])) continue;
-					$accounts[$bank_account['iban']] = $bank_account['account_name'];
-				}
-			
-			if(!empty($accounts)){
-				$banks_dropdown = woocommerce_form_field('_wsb_barcode_iban', array(
-					'type'          => 'select',
-					'class'         => array('barcode-iban-class form-row-wide'),
-					'label'         => __('Account to pay', 'wsb-hub3'),
-					'required'      => true,
-					'options'       => $accounts,
-				), '');
-				return $banks_dropdown;
-			} else {
-				return $description;
-			}
-		}
+	function wsb_hub3_gateway_description( $description, $gateway_id ) {
+    if ( 'bacs' === $gateway_id ) {
+        $payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
+        $accounts = array();
 
-		return $description;
-	}
+        foreach ( $payment_method->account_details as $bank_account ) {
+            if ( empty( $bank_account['iban'] ) ) continue;
+            $accounts[ $bank_account['iban'] ] = $bank_account['account_name'];
+        }
+
+        // If we have IBANs from BACS to show
+        if ( ! empty( $accounts ) ) {
+            if ( count( $accounts ) == 1 ) {
+                // Single IBAN - hidden field
+                $account = key( $accounts );
+                $hidden_field = woocommerce_form_field( '_wsb_barcode_iban', array(
+                    'type'     => 'hidden',
+                    'class'    => array( 'barcode-iban-class hidden-field' ),
+                    'required' => true,
+					'default'  => $account,
+                ), $account );
+
+                return $description . $hidden_field;
+
+            } else {
+                // Multiple IBANs - show as select dropdown
+                $banks_dropdown = woocommerce_form_field( '_wsb_barcode_iban', array(
+                    'type'     => 'select',
+                    'class'    => array( 'barcode-iban-class form-row-wide' ),
+                    'label'    => __( 'Account to pay', 'wsb-hub3' ),
+                    'required' => true,
+					'return' => true,
+                    'options'  => $accounts,
+                ), '' );
+
+                return $description . $banks_dropdown;
+            }
+        }
+
+        return $description;
+    }
+
+    return $description;
+}
 
 }

@@ -12,9 +12,9 @@ jQuery.noConflict()
 
     $(document.body).on('updated_checkout', function () {
       if ($('#payment_method_bacs').is(':checked')) {
-        $('#wsb_barcode_iban_field').show()
+        $('#_wsb_barcode_iban_field').show()
       } else {
-        $('#wsb_barcode_iban_field').hide()
+        $('#_wsb_barcode_iban_field').hide()
       }
     })
 
