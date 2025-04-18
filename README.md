@@ -62,6 +62,10 @@ Also you can add sufix and/or prefix to the reference number (up to 6 digits for
 
 ## Changelog
 
+### 3.0.2
+
+- Enhancement: Compatibility with WP 6.8 and WooCommerce 9.8
+
 ### 3.0.1
 
 - Fix: Payment description and IBAN select list in frontend
