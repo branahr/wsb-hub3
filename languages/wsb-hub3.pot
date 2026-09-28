@@ -534,3 +534,128 @@ msgstr ""
 #: admin/class-wsb-hub3-admin.php:399
 msgid "yyyy"
 msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Recipient name can have at most %1$d characters (currently %2$d)."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Address can have at most %1$d characters (currently %2$d)."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "City can have at most %1$d characters (currently %2$d)."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "HUB3 barcodes can not be generated because some recipient data is longer than the HUB-3 standard allows: %s. Please shorten it."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Edit recipient settings"
+msgstr ""
+
+#: public/class-wsb-hub3-public.php
+#, php-format
+msgid "HUB3 barcode could not be generated: %s"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Payment model according to FINA rules. HR01 adds a check digit to the reference, HR99 is used without a reference."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR00 - without check digit"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR01 - with check digit"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR99 - without reference"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Reference preview"
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "The payment reference can have at most %d parts. When the reference contains both the order number and the date, use either a prefix or a sufix, not both."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+msgid "Characters other than digits were removed from the order number."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "The order number was shortened to its last digits, because one part can have at most %d digits."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Parts were left out, because the reference can have at most %d parts."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Parts were left out, because the reference can have at most %d characters."
+msgstr ""
+
+#: includes/class-wsb-hub3-validator.php
+msgid "IBAN check digits are not valid. Please check the IBAN for typos."
+msgstr ""
+
+#: public/class-wsb-hub3-public.php
+#, php-format
+msgid "HUB3 payment reference was adjusted to FINA rules: %1$s. %2$s"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "Payment model HR%s is not supported. HR00 is used until you choose HR00, HR01 or HR99."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "With the current settings the HUB3 payment reference for the latest order is adjusted to %1$s. %2$s Please change the reference settings."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR99 is used without a reference."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "Example for the latest order %s, dated today."
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Other"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of goods and services"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of goods"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of services"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Supplier payment"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Commercial payment"
+msgstr ""

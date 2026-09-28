@@ -12,7 +12,7 @@ Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins
 
 ## Requirements
 
-- PHP version 5.6 and above
+- PHP version 7.4 and above
 - GD library installed on server
 - Wordpress version 5.0 and above
 - Woocommerce plugin installed and enabled (v 4.0 or greater)
@@ -51,7 +51,13 @@ If you use date in the reference number, then you can select its format:
 - yyyy
 - yy
 
-Also you can add sufix and/or prefix to the reference number (up to 6 digits for each)
+Also you can add sufix and/or prefix to the reference number (up to 6 digits for each). According to FINA rules the reference can have at most 3 parts, so with order-date or date-order use either a prefix or a sufix. The recipient settings show a live preview of the reference.
+
+### Payment model
+
+- HR00: reference without check digit
+- HR01: check digit (MOD11INI) is added to the reference automatically
+- HR99: payment without reference
 
 ## Installation
 
@@ -61,6 +67,25 @@ Also you can add sufix and/or prefix to the reference number (up to 6 digits for
 3. Find _HUB3_ tab under Woocommerce settings for HUB3 options
 
 ## Changelog
+
+### 3.1.0
+
+- Feature: Payment model selection according to FINA rules: HR00, HR01 (check digit added automatically) and HR99 (no reference)
+- Feature: Live payment reference preview in recipient settings
+- Enhancement: Payment reference follows FINA rules (at most 3 parts, 12 digits per part, digits only, 22 characters)
+- Enhancement: Length limits and live character counters for settings fields, according to HUB-3 limits
+- Enhancement: Input masks for IBAN, postcode, reference prefix/sufix and purpose code, with purpose code suggestions
+- Enhancement: IBAN check digit validation
+- Enhancement: Admin notices when saved recipient data or reference settings don't meet HUB-3 or FINA rules
+- Enhancement: Order notes and WooCommerce log entries when a barcode can't be generated or the reference is adjusted
+- Enhancement: Long text is scaled to fit on the HUB-3A slip
+- Fix: Barcode service errors were saved as barcode images
+- Fix: Croatian letters counted as two characters in recipient fields, and hidden characters in pasted text were rejected
+- Fix: Payer name or address with Croatian letters could break barcode generation
+- Fix: "&" in payer name was shown as "&amp;" in the barcode
+- Fix: Payment description could exceed 35 characters after inserting the order number
+- Fix: Reference date format validation
+- Security: SSL certificate verification enabled for barcode service requests
 
 ### 3.0.2
 

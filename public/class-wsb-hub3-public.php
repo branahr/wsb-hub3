@@ -132,7 +132,7 @@ class Wsb_Hub3_Public {
 		$street_max_chars = 27;	
 		$first_name = $data['billing_first_name'];
 		$last_name = $data['billing_last_name'];
-		$sender_name = esc_html($first_name . " " . $last_name);
+		$sender_name = $first_name . " " . $last_name;
 		$sender_street = $data['billing_address_1'];
 
 		if ($this->hpos) {
@@ -148,9 +148,9 @@ class Wsb_Hub3_Public {
 				$sender_name = get_post_meta( $order_id, 'Ime tvrtke', true );
 			}
 			if ($this->hpos) {
-				$sender_street = esc_html($order->get_meta('Adresa tvrtke'));
+				$sender_street = $order->get_meta('Adresa tvrtke');
 			} else {
-				$sender_street = esc_html(get_post_meta( $order_id, 'Adresa tvrtke', true ));
+				$sender_street = get_post_meta( $order_id, 'Adresa tvrtke', true );
 			}
 		} else {
 			$company = $order->get_billing_company();
@@ -159,33 +159,33 @@ class Wsb_Hub3_Public {
 			} 
 		}
 
-		$name_length = strlen($sender_name);
+		$name_length = mb_strlen($sender_name);
 		if($name_length > $name_max_chars){
-			$sender_name = substr($sender_name, 0, $name_max_chars);
+			$sender_name = mb_substr($sender_name, 0, $name_max_chars);
 		}
 
-		$street_length = strlen($sender_street);
+		$street_length = mb_strlen($sender_street);
 		if($street_length > $street_max_chars){
-			$sender_street = substr($sender_street, 0, $street_max_chars);
+			$sender_street = mb_substr($sender_street, 0, $street_max_chars);
 		}
 
 		$place_max_chars = 27;
 		$sender_postcode = $data['billing_postcode'];
 		$sender_city = $data['billing_city'];
 		$sender_place = $sender_postcode . " " . $sender_city;
-		$place_length = strlen($sender_place);
+		$place_length = mb_strlen($sender_place);
 		if($place_length > $place_max_chars){
-			$sender_place = substr($sender_place, 0, $place_max_chars);
+			$sender_place = mb_substr($sender_place, 0, $place_max_chars);
 		}
 
 		$receiver_name = get_option( 'wsb_hub3_receiver_name' );
 		$receiver_street = get_option( 'wsb_hub3_receiver_address' );
 		$receiver_place = get_option( 'wsb_hub3_receiver_postcode' ) . " " . get_option( 'wsb_hub3_receiver_city' );
-		$receiver_model = get_option( 'wsb_hub3_receiver_model' );
-		$receiver_reference = $this->get_reference($order_id);
+		$receiver_model = Wsb_Hub3_Validator::receiver_model();
+		$receiver_reference = $this->get_reference($order_id, $reference_changes);
 		$purpose = get_option( 'wsb_hub3_payment_purpose' );
 		$order_number = $order->get_order_number();
-		$description = str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description' ));
+		$description = $this->get_payment_description($order);
 
 		$hubparams = array();
 		$hubparams['renderer'] = 'image';
@@ -219,15 +219,50 @@ class Wsb_Hub3_Public {
 			'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
 			'body'        => json_encode($hubparams),
 			'method'      => 'POST',
-			'sslverify' => false
+			'timeout'     => 15,
 		));
-		$body = wp_remote_retrieve_body( $barcode );
-		$barcode_image = fopen(plugin_dir_path( __DIR__ ) . "barcodes/barcode_" . $order_id . "." . $img_type, "w");
-		fwrite($barcode_image, $body);
-		fclose($barcode_image);
-		$order->update_meta_data( '_wsb_hub3_barcode', 'barcode_' . $order_id . '.' . $img_type);
+
+		$notes = array();
+		if ( $reference_changes ) {
+			/* translators: 1: adjusted payment reference, 2: explanation of the changes */
+			$notes[] = sprintf( __( 'HUB3 payment reference was adjusted to FINA rules: %1$s. %2$s', 'wsb-hub3' ), $receiver_reference, implode( ' ', Wsb_Hub3_Validator::reference_change_messages( $reference_changes ) ) );
+		}
+
+		$barcode_file = 'barcode_' . $order_id . '.' . $img_type;
+		$barcode_path = plugin_dir_path( __DIR__ ) . 'barcodes/' . $barcode_file;
+		if ( is_wp_error( $barcode ) || 200 !== (int) wp_remote_retrieve_response_code( $barcode ) ) {
+			if ( is_wp_error( $barcode ) ) {
+				$error = $barcode->get_error_message();
+			} else {
+				$response = json_decode( wp_remote_retrieve_body( $barcode ), true );
+				$error    = ! empty( $response['errors'] ) ? implode( '; ', (array) $response['errors'] ) : 'HTTP ' . wp_remote_retrieve_response_code( $barcode );
+			}
+			// Remove any older barcode so outdated payment data is never shown.
+			if ( file_exists( $barcode_path ) ) {
+				unlink( $barcode_path );
+			}
+			$order->delete_meta_data( '_wsb_hub3_barcode' );
+			/* translators: %s: error returned by the barcode service */
+			$notes[] = sprintf( __( 'HUB3 barcode could not be generated: %s', 'wsb-hub3' ), $error );
+			wc_get_logger()->error( 'Barcode for order ' . $order_id . ' not generated: ' . $error, array( 'source' => 'wsb-hub3' ) );
+		} else {
+			file_put_contents( $barcode_path, wp_remote_retrieve_body( $barcode ) );
+			$order->update_meta_data( '_wsb_hub3_barcode', $barcode_file );
+		}
+
+		// Orders are regenerated on every admin update, so only add a note when something changed.
+		$note = implode( ' ', $notes );
+		if ( $note !== (string) $order->get_meta( '_wsb_hub3_last_note' ) ) {
+			if ( '' !== $note ) {
+				$order->add_order_note( $note );
+			}
+			$order->update_meta_data( '_wsb_hub3_last_note', $note );
+		}
+
 		$order->update_meta_data( '_wsb_sender_name', sanitize_text_field($sender_name));
-		$hub3_image = $this->create_hub3($order_id);
+		// create_hub3() reads the barcode and sender name from saved meta.
+		$order->save_meta_data();
+		$hub3_image = $this->create_hub3($order_id, $order);
 		
 		if("" != $hub3_image){
 			$order->update_meta_data( '_wsb_hub3_slip', $hub3_image);
@@ -455,67 +490,56 @@ class Wsb_Hub3_Public {
 		
 	}
 
-	function get_reference($order_id){
-		$date = "";
+	function get_reference($order_id, &$changes = null){
 		$order = wc_get_order( $order_id );
-		$date_created = strtotime($order->get_date_created());
-		$reference_date_format = get_option( 'wsb_hub3_receiver_reference_date', 'ddmmyyyy' );
-		switch ($reference_date_format) {
-			case 'ddmmyyyy':
-				$date = date("dmY", $date_created);
-				break;
-			case 'ddmmyy':
-				$date = date("dmy", $date_created);
-				break;
-			case 'ddmm':
-				$date = date("dm", $date_created);
-				break;
-			case 'mmyyyy':
-				$date = date("mY", $date_created);
-				break;
-			case 'mmyy':
-				$date = date("my", $date_created);
-				break;
-			case 'yyyy':
-				$date = date("Y", $date_created);
-				break;
-			case 'yy':
-				$date = date("y", $date_created);
-				break;
-			
-			default:
-				$date = "";
-				break;
-		}
-		
-		$order_number = $order->get_order_number();
-		$reference = $order_number;
+		$date  = Wsb_Hub3_Validator::reference_date( get_option( 'wsb_hub3_receiver_reference_date', 'ddmmyyyy' ), strtotime( $order->get_date_created() ) );
+		return esc_html( Wsb_Hub3_Validator::build_reference(
+			Wsb_Hub3_Validator::receiver_model(),
+			get_option( 'wsb_hub3_receiver_reference_prefix' ),
+			get_option( 'wsb_hub3_receiver_reference', 'orderid' ),
+			$date,
+			$order->get_order_number(),
+			get_option( 'wsb_hub3_receiver_reference_sufix' ),
+			$changes
+		) );
+	}
 
-		$reference_format = get_option( 'wsb_hub3_receiver_reference', 'orderid' );
-		switch ($reference_format) {
-			case 'orderid':
-				$reference = $order_number;
-				break;
-			case 'date':
-				$reference = $date;
-				break;
-			case 'order-date':
-				$reference = $order_number . "-" . $date;
-				break;
-			case 'date-order':
-				$reference =  $date. "-" . $order_number;
-				break;
+	/**
+	 * Payment description with [order] replaced, limited to the HUB-3 maximum of 35 characters.
+	 * The template text is shortened, never the order number, which identifies the payment.
+	 */
+	function get_payment_description($order){
+		$max          = 35;
+		$template     = get_option( 'wsb_hub3_payment_description', 'Plaćanje narudžbe br. [order]' );
+		$order_number = (string) $order->get_order_number();
+		$budget       = $max - substr_count( $template, '[order]' ) * mb_strlen( $order_number );
+		$description  = '';
+		$pieces       = preg_split( '/(\[order\])/', $template, -1, PREG_SPLIT_DELIM_CAPTURE );
+		foreach ( $pieces as $i => $piece ) {
+			if ( '[order]' === $piece ) {
+				$description .= $order_number;
+				continue;
+			}
+			if ( mb_strlen( $piece ) > $budget ) {
+				$cut        = mb_substr( $piece, 0, max( 0, $budget ) );
+				$split_word = ! preg_match( '/^\s/u', mb_substr( $piece, mb_strlen( $cut ), 1 ) );
+				// Drop a partial word, and keep a space before a following order number.
+				if ( $split_word || isset( $pieces[ $i + 1 ] ) ) {
+					$cut = preg_replace( '/\S+$/u', '', $cut );
+				}
+				$piece = $cut;
+			}
+			$budget      -= mb_strlen( $piece );
+			$description .= $piece;
 		}
-		$reference_prefix = !empty(get_option( 'wsb_hub3_receiver_reference_prefix' )) ? get_option( 'wsb_hub3_receiver_reference_prefix' ) . "-" : "";
-		$reference_sufix = !empty(get_option( 'wsb_hub3_receiver_reference_sufix' )) ? "-" . get_option( 'wsb_hub3_receiver_reference_sufix' ) : "";
-		return esc_html($receiver_reference = $reference_prefix . $reference . $reference_sufix);
+		return mb_substr( trim( preg_replace( '/\s+/u', ' ', $description ) ), 0, $max );
 	}
 
 	function get_data_html($order_id){
 		$order = wc_get_order( $order_id );
 		$order_number = $order->get_order_number();
 		$reference = $this->get_reference($order_id);
-		$description = str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description', 'Plaćanje narudžbe br. [order]' ));
+		$description = $this->get_payment_description($order);
 		
 		$total = $order->get_formatted_order_total();
 		if ($this->hpos) {
@@ -530,10 +554,10 @@ class Wsb_Hub3_Public {
 		$html .= "<tr><td>" . __( 'Recipient', 'wsb-hub3' ) . ": </td><td>" .  esc_html(get_option( 'wsb_hub3_receiver_name' )) . "<br>" . esc_html(get_option( 'wsb_hub3_receiver_address' )) . "<br>" . esc_html(get_option( 'wsb_hub3_receiver_postcode' )) . " " . esc_html(get_option( 'wsb_hub3_receiver_city' )) . "</td></tr>";
 		$html .= "<tr><td>" . __( 'Amount', 'wsb-hub3' ) . ": </td><td>" . $total . "</td></tr>";
 		$html .= "<tr><td>" . __( 'IBAN', 'wsb-hub3' ) . ": </td><td>" . esc_html(get_option( 'wsb_hub3_receiver_iban' )) . "</td></tr>";
-		if(!empty(get_option( 'wsb_hub3_receiver_model' ))){
-			$html .= "<tr><td>" . __( 'Model', 'wsb-hub3' ) . ": </td><td>HR" . esc_html(get_option( 'wsb_hub3_receiver_model' )) . "</td></tr>";
+		$html .= "<tr><td>" . __( 'Model', 'wsb-hub3' ) . ": </td><td>HR" . esc_html( Wsb_Hub3_Validator::receiver_model() ) . "</td></tr>";
+		if ( '' !== $reference ) {
+			$html .= "<tr><td>" . __( 'Reference', 'wsb-hub3' ) . ": </td><td>" . esc_html($reference) . "</td></tr>";
 		}
-		$html .= "<tr><td>" . __( 'Reference', 'wsb-hub3' ) . ": </td><td>" . esc_html($reference) . "</td></tr>";
 		if(!empty(get_option( 'wsb_hub3_payment_purpose' ))){
 			$html .= "<tr><td>" . __( 'Purpose code', 'wsb-hub3' ) . ": </td><td>" . esc_html(get_option( 'wsb_hub3_payment_purpose' )) . "</td></tr>";
 		}
@@ -543,8 +567,10 @@ class Wsb_Hub3_Public {
 		return $html;
 	}
 
-	 function create_hub3($order_id){
-		$order = wc_get_order( $order_id );
+	 function create_hub3($order_id, $order = null){
+		if ( ! $order ) {
+			$order = wc_get_order( $order_id );
+		}
 		$order_number = $order->get_order_number();
 		$recipient = get_option( 'wsb_hub3_receiver_name' );
 		$recipient_address = esc_html(get_option( 'wsb_hub3_receiver_address' ));
@@ -556,11 +582,8 @@ class Wsb_Hub3_Public {
 		}
 		if(!$iban) $iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
 		$reference = $reference = $this->get_reference($order_id);
-		$description = esc_html(str_replace('[order]', $order_number, get_option( 'wsb_hub3_payment_description' )));
-		$model = "HR00";
-		if(!empty(get_option( 'wsb_hub3_receiver_model' )) && "" != get_option( 'wsb_hub3_receiver_model' )){
-			$model = esc_html("HR" . get_option( 'wsb_hub3_receiver_model' ));
-		}
+		$description = $this->get_payment_description($order);
+		$model = "HR" . Wsb_Hub3_Validator::receiver_model();
 		
 		if ($this->hpos) {
 			$sender = $order->get_meta('_wsb_sender_name');
@@ -593,31 +616,37 @@ class Wsb_Hub3_Public {
 			$purpose = esc_html( get_option( 'wsb_hub3_payment_purpose' ));
 			$this->imagettftextWsb($hub3a, 18, 0, 277, 250, $black, $font_roboto, $purpose, 3);
 		}
-		$this->imagettftextWsb($hub3a, 12, 0, 438, 227, $black, $font_times, $description);
-		$this->imagettftextWsb($hub3a, 12, 0, 805, 240, $black, $font_times, $description);
+		// Usable text widths in px, measured from the box borders in hub-3a.jpg.
+		$left_width = 218;
+		$right_width = 274;
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(12, $font_times, $description, 328), 0, 438, 227, $black, $font_times, $description);
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(12, $font_times, $description, 280), 0, 805, 240, $black, $font_times, $description);
 
 		$bbox_total2 = imagettfbbox(12, 0, $font_times, $total2);
 		$x_total2 = 1080 - $bbox_total2[4];
 		$this->imagettftextWsb($hub3a, 12, 0, $x_total2, 54, $black, $font_times, $total2);
 
-		$this->imagettftextWsb($hub3a, 14, 0, 35, 60, $black, $font_times, $sender);
-		$this->imagettftextWsb($hub3a, 14, 0, 35, 80, $black, $font_times, $sender_address);
+		$sender_place = $sender_postcode . " " . $sender_city;
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $sender, $left_width), 0, 35, 60, $black, $font_times, $sender);
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $sender_address, $left_width), 0, 35, 80, $black, $font_times, $sender_address);
 		if( "" == $sender_address2 ){
-			$this->imagettftextWsb($hub3a, 14, 0, 35, 100, $black, $font_times, $sender_postcode . " " . $sender_city );	
+			$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $sender_place, $left_width), 0, 35, 100, $black, $font_times, $sender_place );	
 		} else {
-			$this->imagettftextWsb($hub3a, 14, 0, 35, 100, $black, $font_times, $sender_address2);
-			$this->imagettftextWsb($hub3a, 14, 0, 35, 120, $black, $font_times, $sender_postcode . " " . $sender_city );
+			$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $sender_address2, $left_width), 0, 35, 100, $black, $font_times, $sender_address2);
+			$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $sender_place, $left_width), 0, 35, 120, $black, $font_times, $sender_place );
 		}
 
-		$this->imagettftextWsb($hub3a, 14, 0, 35, 200, $black, $font_times, $recipient);
-		$this->imagettftextWsb($hub3a, 14, 0, 35, 220, $black, $font_times, $recipient_address);
-		$this->imagettftextWsb($hub3a, 14, 0, 35, 240, $black, $font_times, $recipient_place);
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $recipient, $left_width), 0, 35, 200, $black, $font_times, $recipient);
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $recipient_address, $left_width), 0, 35, 220, $black, $font_times, $recipient_address);
+		$this->imagettftextWsb($hub3a, $this->fit_font_size(14, $font_times, $recipient_place, $left_width), 0, 35, 240, $black, $font_times, $recipient_place);
 
-		$bbox_sender2 = imagettfbbox(12, 0, $font_times, $sender . ", " . $sender_city);
+		$sender2 = $sender . ", " . $sender_city;
+		$size_sender2 = $this->fit_font_size(12, $font_times, $sender2, $right_width);
+		$bbox_sender2 = imagettfbbox($size_sender2, 0, $font_times, $sender2);
 		$x_sender2 = 1080 - $bbox_sender2[4];
-		$this->imagettftextWsb($hub3a, 12, 0, $x_sender2, 86, $black, $font_times, $sender . ", " . $sender_city);
+		$this->imagettftextWsb($hub3a, $size_sender2, 0, $x_sender2, 86, $black, $font_times, $sender2);
 
-		$reference2 = $model . " " . $reference;
+		$reference2 = trim($model . " " . $reference);
 		$bbox_reference2 = imagettfbbox(12, 0, $font_times, $reference2);
 		$x_reference2 = 1080 - $bbox_reference2[4];
 		$this->imagettftextWsb($hub3a, 12, 0, $x_reference2, 201, $black, $font_times, $reference2);
@@ -634,7 +663,11 @@ class Wsb_Hub3_Public {
 			$img_file = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
 		}
 		$barcode_big = $img_path . $img_file;
-		$img_type = GetImageSize($barcode_big);
+		$barcode_resized = false;
+		$img_type = ( $img_file && is_file( $barcode_big ) ) ? getimagesize( $barcode_big ) : false;
+		if ( ! $img_type ) {
+			$img_type = array( 2 => 0 );
+		}
 		if($img_type[2] == 1){ //gif
 			$barcode_resized = $this->resize_barcode_image(imagecreatefromgif(esc_html($barcode_big)));
 		} 
@@ -675,6 +708,18 @@ class Wsb_Hub3_Public {
 				$temp_x += $spacing + 14.7;
 			}
 		}
+	}
+
+	private function fit_font_size($size, $font, $text, $max_width, $min_size = 8)
+	{
+		while ($size > $min_size) {
+			$bbox = imagettfbbox($size, 0, $font, (string) $text);
+			if ($bbox[2] - $bbox[0] <= $max_width) {
+				break;
+			}
+			$size -= 0.5;
+		}
+		return $size;
 	}
 
 	private function resize_barcode_image($image) {

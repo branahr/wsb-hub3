@@ -551,3 +551,128 @@ msgstr "gg"
 #: admin/class-wsb-hub3-admin.php:399
 msgid "yyyy"
 msgstr "gggg"
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Recipient name can have at most %1$d characters (currently %2$d)."
+msgstr "Naziv primatelja može imati najviše %1$d znakova (trenutno %2$d)."
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Address can have at most %1$d characters (currently %2$d)."
+msgstr "Adresa može imati najviše %1$d znakova (trenutno %2$d)."
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "City can have at most %1$d characters (currently %2$d)."
+msgstr "Mjesto može imati najviše %1$d znakova (trenutno %2$d)."
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "HUB3 barcodes can not be generated because some recipient data is longer than the HUB-3 standard allows: %s. Please shorten it."
+msgstr "HUB3 barkodovi se ne mogu generirati jer su neki podaci primatelja duži nego što HUB-3 standard dopušta: %s. Molimo skratite ih."
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Edit recipient settings"
+msgstr "Uredi postavke primatelja"
+
+#: public/class-wsb-hub3-public.php
+#, php-format
+msgid "HUB3 barcode could not be generated: %s"
+msgstr "HUB3 barkod nije moguće generirati: %s"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Payment model according to FINA rules. HR01 adds a check digit to the reference, HR99 is used without a reference."
+msgstr "Model plaćanja prema pravilima FINA-e. HR01 dodaje kontrolni broj pozivu na broj, HR99 se koristi bez poziva na broj."
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR00 - without check digit"
+msgstr "HR00 - bez kontrolnog broja"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR01 - with check digit"
+msgstr "HR01 - s kontrolnim brojem"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR99 - without reference"
+msgstr "HR99 - bez poziva na broj"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Reference preview"
+msgstr "Pregled poziva na broj"
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "The payment reference can have at most %d parts. When the reference contains both the order number and the date, use either a prefix or a sufix, not both."
+msgstr "Poziv na broj može imati najviše %d podatka. Kada poziv na broj sadrži i broj narudžbe i datum, koristite prefiks ili sufiks, ne oba."
+
+#: includes/class-wsb-hub3-validator.php
+msgid "Characters other than digits were removed from the order number."
+msgstr "Iz broja narudžbe uklonjeni su znakovi koji nisu znamenke."
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "The order number was shortened to its last digits, because one part can have at most %d digits."
+msgstr "Broj narudžbe skraćen je na zadnje znamenke jer jedan podatak može imati najviše %d znamenaka."
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Parts were left out, because the reference can have at most %d parts."
+msgstr "Neki podaci su izostavljeni jer poziv na broj može imati najviše %d podatka."
+
+#: includes/class-wsb-hub3-validator.php
+#, php-format
+msgid "Parts were left out, because the reference can have at most %d characters."
+msgstr "Neki podaci su izostavljeni jer poziv na broj može imati najviše %d znakova."
+
+#: includes/class-wsb-hub3-validator.php
+msgid "IBAN check digits are not valid. Please check the IBAN for typos."
+msgstr "Kontrolni broj IBAN-a nije ispravan. Provjerite IBAN."
+
+#: public/class-wsb-hub3-public.php
+#, php-format
+msgid "HUB3 payment reference was adjusted to FINA rules: %1$s. %2$s"
+msgstr "HUB3 poziv na broj prilagođen je pravilima FINA-e: %1$s. %2$s"
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "Payment model HR%s is not supported. HR00 is used until you choose HR00, HR01 or HR99."
+msgstr "Model plaćanja HR%s nije podržan. Koristi se HR00 dok ne odaberete HR00, HR01 ili HR99."
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "With the current settings the HUB3 payment reference for the latest order is adjusted to %1$s. %2$s Please change the reference settings."
+msgstr "S trenutnim postavkama HUB3 poziv na broj za zadnju narudžbu prilagođava se na %1$s. %2$s Molimo promijenite postavke poziva na broj."
+
+#: admin/class-wsb-hub3-admin.php
+msgid "HR99 is used without a reference."
+msgstr "HR99 se koristi bez poziva na broj."
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "Example for the latest order %s, dated today."
+msgstr "Primjer za zadnju narudžbu %s s današnjim datumom."
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Other"
+msgstr "Ostalo"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of goods and services"
+msgstr "Kupnja robe i usluga"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of goods"
+msgstr "Kupnja robe"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Purchase of services"
+msgstr "Kupnja usluga"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Supplier payment"
+msgstr "Plaćanje dobavljaču"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Commercial payment"
+msgstr "Komercijalno plaćanje"

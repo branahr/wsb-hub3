@@ -20,6 +20,29 @@
  */
 class Wsb_Hub3_Validator {
 
+	// HUB-3 barcode limits, in characters.
+	const RECEIVER_NAME_MAX    = 25;
+	const RECEIVER_ADDRESS_MAX = 25;
+	// Place is "postcode city" (max 27), postcode is always 5 digits.
+	const RECEIVER_CITY_MAX    = 21;
+	const REFERENCE_MAX        = 22;
+
+	// FINA "poziv na broj" rules (models HR00, HR01): up to 3 parts of up to 12 digits.
+	const REFERENCE_PARTS_MAX  = 3;
+	const REFERENCE_PART_MAX   = 12;
+	const MODELS               = array( '00', '01', '99' );
+
+	// Reference date format option => PHP date() format.
+	const REFERENCE_DATE_FORMATS = array(
+		'ddmmyyyy' => 'dmY',
+		'ddmmyy'   => 'dmy',
+		'ddmm'     => 'dm',
+		'mmyyyy'   => 'mY',
+		'mmyy'     => 'my',
+		'yyyy'     => 'Y',
+		'yy'       => 'y',
+	);
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -44,7 +67,13 @@ class Wsb_Hub3_Validator {
 			$this->wsb_notices[] = array( 'message' => __( 'Name can not be empty', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
-		if (!preg_match("/^[0-9A-Za-z .,\-()_ĐŠŽĆČđšžćč&]{2,25}$/", $name)) {
+		$length = mb_strlen($name);
+		if ($length > self::RECEIVER_NAME_MAX) {
+			/* translators: 1: maximum number of characters, 2: current number of characters */
+			$this->wsb_notices[] = array( 'message' => sprintf( __( 'Recipient name can have at most %1$d characters (currently %2$d).', 'wsb-hub3' ), self::RECEIVER_NAME_MAX, $length ), 'type' => 'error' );
+			return false;
+		}
+		if (!preg_match("/^[0-9A-Za-z .,\-()_ĐŠŽĆČđšžćč&]{2,}$/u", $name)) {
 			$this->wsb_notices[] = array( 'message' => __( 'Name is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
@@ -78,7 +107,13 @@ class Wsb_Hub3_Validator {
 			$this->wsb_notices[] = array( 'message' => __( 'Address can not be empty', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
-		if (!preg_match("/^[0-9A-Za-z \/\-.,()ĐŠŽĆČđšžćč]{4,25}$/", $address)) {
+		$length = mb_strlen($address);
+		if ($length > self::RECEIVER_ADDRESS_MAX) {
+			/* translators: 1: maximum number of characters, 2: current number of characters */
+			$this->wsb_notices[] = array( 'message' => sprintf( __( 'Address can have at most %1$d characters (currently %2$d).', 'wsb-hub3' ), self::RECEIVER_ADDRESS_MAX, $length ), 'type' => 'error' );
+			return false;
+		}
+		if (!preg_match("/^[0-9A-Za-z \/\-.,()ĐŠŽĆČđšžćč]{4,}$/u", $address)) {
 			$this->wsb_notices[] = array( 'message' => __( 'Address is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
@@ -143,7 +178,13 @@ class Wsb_Hub3_Validator {
 			$this->wsb_notices[] = array( 'message' => __( 'City can not be empty', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
-		if (!preg_match("/^[A-Za-z .,ĐŠŽĆČđšžćč]{2,35}$/", $city)) {
+		$length = mb_strlen($city);
+		if ($length > self::RECEIVER_CITY_MAX) {
+			/* translators: 1: maximum number of characters, 2: current number of characters */
+			$this->wsb_notices[] = array( 'message' => sprintf( __( 'City can have at most %1$d characters (currently %2$d).', 'wsb-hub3' ), self::RECEIVER_CITY_MAX, $length ), 'type' => 'error' );
+			return false;
+		}
+		if (!preg_match("/^[A-Za-z .,ĐŠŽĆČđšžćč]{2,}$/u", $city)) {
 			$this->wsb_notices[] = array( 'message' => __( 'City is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
@@ -194,6 +235,19 @@ class Wsb_Hub3_Validator {
 			$this->wsb_notices[] = array( 'message' => __( 'IBAN is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
+		// ISO 13616: with the first 4 characters moved to the end and letters as numbers (A=10), mod 97 must be 1.
+		$numeric = '';
+		foreach (str_split(substr($iban, 4) . substr($iban, 0, 4)) as $char) {
+			$numeric .= ctype_alpha($char) ? (string) (ord($char) - 55) : $char;
+		}
+		$rest = 0;
+		foreach (str_split($numeric, 7) as $chunk) {
+			$rest = (int) ($rest . $chunk) % 97;
+		}
+		if (1 !== $rest) {
+			$this->wsb_notices[] = array( 'message' => __( 'IBAN check digits are not valid. Please check the IBAN for typos.', 'wsb-hub3' ), 'type' => 'error' );
+			return false;
+		}
 		return true;
 	}
 
@@ -203,11 +257,151 @@ class Wsb_Hub3_Validator {
 	 */
 	function is_valid_model($model) 
 	{
-		if (!preg_match("/^[0-9]{2}$/", $model)) {
+		if (!in_array((string) $model, self::MODELS, true)) {
 			$this->wsb_notices[] = array( 'message' => __( 'Model is not valid', 'wsb-hub3' ), 'type' => 'error' );
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Saved payment model, falling back to HR00 when empty or unsupported.
+	 */
+	public static function receiver_model() {
+		$model = (string) get_option( 'wsb_hub3_receiver_model' );
+		return in_array( $model, self::MODELS, true ) ? $model : '00';
+	}
+
+	/**
+	 * Validate that the reference layout has no more parts than FINA allows.
+	 * @since    3.1.0
+	 */
+	function is_valid_reference_parts($model, $prefix, $format, $sufix)
+	{
+		if ('99' === (string) $model) {
+			return true;
+		}
+		$parts = in_array($format, array('order-date', 'date-order'), true) ? 2 : 1;
+		$parts += ('' !== (string) $prefix ? 1 : 0) + ('' !== (string) $sufix ? 1 : 0);
+		if ($parts > self::REFERENCE_PARTS_MAX) {
+			/* translators: %d: maximum number of reference parts */
+			$this->wsb_notices[] = array( 'message' => sprintf( __( 'The payment reference can have at most %d parts. When the reference contains both the order number and the date, use either a prefix or a sufix, not both.', 'wsb-hub3' ), self::REFERENCE_PARTS_MAX ), 'type' => 'error' );
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Date part of the payment reference.
+	 */
+	public static function reference_date( $format, $timestamp ) {
+		return isset( self::REFERENCE_DATE_FORMATS[ $format ] ) ? date( self::REFERENCE_DATE_FORMATS[ $format ], $timestamp ) : '';
+	}
+
+	/**
+	 * Build a payment reference that follows FINA rules for models HR00, HR01 and HR99.
+	 * $changes receives a code for every adjustment made: digits, part_length, parts, length.
+	 */
+	public static function build_reference( $model, $prefix, $format, $date, $order_number, $sufix, &$changes = null ) {
+		$changes = array();
+		if ( '99' === (string) $model ) {
+			return '';
+		}
+		$check = '01' === (string) $model ? 1 : 0;
+
+		$order = preg_replace( '/\D/', '', (string) $order_number );
+		if ( $order !== (string) $order_number ) {
+			$changes[] = 'digits';
+		}
+		if ( strlen( $order ) > self::REFERENCE_PART_MAX ) {
+			// The last digits of an order number are the ones that tell orders apart.
+			$order     = substr( $order, -self::REFERENCE_PART_MAX );
+			$changes[] = 'part_length';
+		}
+
+		$parts = array();
+		if ( '' !== (string) $prefix ) {
+			$parts['prefix'] = (string) $prefix;
+		}
+		switch ( $format ) {
+			case 'date':
+				$parts['date'] = $date;
+				break;
+			case 'order-date':
+				$parts['order'] = $order;
+				$parts['date']  = $date;
+				break;
+			case 'date-order':
+				$parts['date']  = $date;
+				$parts['order'] = $order;
+				break;
+			default:
+				$parts['order'] = $order;
+				break;
+		}
+		if ( '' !== (string) $sufix ) {
+			$parts['sufix'] = (string) $sufix;
+		}
+		$parts = array_filter( $parts, 'strlen' );
+
+		// Leave out other parts first; the order number identifies the payment.
+		foreach ( array( 'sufix', 'prefix', 'date' ) as $key ) {
+			$too_many = count( $parts ) > self::REFERENCE_PARTS_MAX;
+			$too_long = strlen( implode( '-', $parts ) ) + $check > self::REFERENCE_MAX;
+			if ( ! $too_many && ! $too_long ) {
+				break;
+			}
+			if ( ! isset( $parts[ $key ] ) || ( 'date' === $key && ! isset( $parts['order'] ) ) ) {
+				continue;
+			}
+			unset( $parts[ $key ] );
+			$changes[] = $too_many ? 'parts' : 'length';
+		}
+		if ( ! $parts ) {
+			return '';
+		}
+
+		if ( $check ) {
+			$last = array_key_last( $parts );
+			// The check digit is appended to the last part, which may then still have at most 12 digits.
+			if ( strlen( $parts[ $last ] ) >= self::REFERENCE_PART_MAX ) {
+				$parts[ $last ] = substr( $parts[ $last ], -( self::REFERENCE_PART_MAX - 1 ) );
+				$changes[]      = 'part_length';
+			}
+			$parts[ $last ] .= self::mod11ini( implode( '', $parts ) );
+		}
+
+		$changes = array_values( array_unique( $changes ) );
+		return implode( '-', $parts );
+	}
+
+	/**
+	 * FINA MOD11INI check digit (model HR01), computed over all digits of the reference.
+	 */
+	public static function mod11ini( $digits ) {
+		$sum    = 0;
+		$weight = 2;
+		for ( $i = strlen( $digits ) - 1; $i >= 0; $i-- ) {
+			$sum += (int) $digits[ $i ] * $weight++;
+		}
+		$rest = $sum % 11;
+		return $rest < 2 ? 0 : 11 - $rest;
+	}
+
+	/**
+	 * Human readable explanations for build_reference() change codes.
+	 */
+	public static function reference_change_messages( $changes ) {
+		$messages = array(
+			'digits'      => __( 'Characters other than digits were removed from the order number.', 'wsb-hub3' ),
+			/* translators: %d: maximum number of digits in one reference part */
+			'part_length' => sprintf( __( 'The order number was shortened to its last digits, because one part can have at most %d digits.', 'wsb-hub3' ), self::REFERENCE_PART_MAX ),
+			/* translators: %d: maximum number of reference parts */
+			'parts'       => sprintf( __( 'Parts were left out, because the reference can have at most %d parts.', 'wsb-hub3' ), self::REFERENCE_PARTS_MAX ),
+			/* translators: %d: maximum reference length */
+			'length'      => sprintf( __( 'Parts were left out, because the reference can have at most %d characters.', 'wsb-hub3' ), self::REFERENCE_MAX ),
+		);
+		return array_values( array_intersect_key( $messages, array_flip( (array) $changes ) ) );
 	}
 
 	/**

@@ -1,6 +1,37 @@
 h2.wsb-hub3-options-title {
-    background: #dee4e9;
-    border: 1px solid #c6d5e4;
-    color: #546272;
-    padding: 3px 10px 5px;
+  background: #dee4e9;
+  border: 1px solid #c6d5e4;
+  color: #546272;
+  padding: 3px 10px 5px;
+}
+
+.wsb-hub3-counter {
+  color: #646970;
+  font-size: 12px;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.wsb-hub3-counter-over {
+  color: #d63638;
+  font-weight: 600;
+}
+
+.wsb-hub3-reference-preview code {
+  font-size: 14px;
+  padding: 4px 8px;
+}
+
+.wsb-hub3-reference-preview .wsb-hub3-preview-problem,
+.wsb-hub3-reference-preview .description {
+  display: block;
+  margin-top: 6px;
+}
+
+.wsb-hub3-preview-error code {
+  outline: 2px solid #d63638;
+}
+
+.wsb-hub3-preview-problem {
+  color: #d63638;
 }

@@ -81,7 +81,20 @@ class Wsb_Hub3_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-admin.js', array( 'wp-color-picker' ), false, true);
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-admin.js', array( 'wp-color-picker' ), $this->version, true);
+		wp_localize_script( $this->plugin_name, 'wsbHub3', array(
+			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+			'nonce'        => wp_create_nonce( 'wsb_hub3_reference_preview' ),
+			// Common ISO 20022 purpose codes.
+			'purposeCodes' => array(
+				'OTHR' => __( 'Other', 'wsb-hub3' ),
+				'GDSV' => __( 'Purchase of goods and services', 'wsb-hub3' ),
+				'GDDS' => __( 'Purchase of goods', 'wsb-hub3' ),
+				'SCVE' => __( 'Purchase of services', 'wsb-hub3' ),
+				'SUPP' => __( 'Supplier payment', 'wsb-hub3' ),
+				'COMC' => __( 'Commercial payment', 'wsb-hub3' ),
+			),
+		) );
 
 	}
 
@@ -147,6 +160,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'textarea',
                     'desc'        => __( 'Text to be shown above payment details', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_description_text',
+					'custom_attributes' => array( 'maxlength' => 150, 'data-wsb-counter' => '1' ),
 					'default' 	  => '',
 					'desc_tip'=> true
 				),
@@ -155,6 +169,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'textarea',
                     'desc'        => __( 'Text to be shown above barcode', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_barcode_text',
+					'custom_attributes' => array( 'maxlength' => 150, 'data-wsb-counter' => '1' ),
 					'default' 	  => '',
 					'desc_tip'=> true
 				),
@@ -219,6 +234,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'HUB-3A slip width in pixels', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_slip_width',
+					'custom_attributes' => array( 'maxlength' => 4 ),
 					'default' 	  => '1100',
 					'placeholder' => '1100',
 					'desc_tip'=> true
@@ -228,6 +244,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Width in pixels of HUB-3A slip sent in email ', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_slip_width_email',
+					'custom_attributes' => array( 'maxlength' => 4 ),
 					'default' 	  => '560',
 					'placeholder' => '560',
 					'desc_tip'=> true
@@ -270,6 +287,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Barcode width in pixels', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_barcode_width',
+					'custom_attributes' => array( 'maxlength' => 4 ),
 					'default' 	  => '400',
 					'placeholder' => '400',
 					'desc_tip'=> true
@@ -279,6 +297,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Width in pixels of barcode sent in email', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_barcode_width_email',
+					'custom_attributes' => array( 'maxlength' => 4 ),
 					'default' 	  => '400',
 					'placeholder' => '400',
 					'desc_tip'=> true
@@ -288,6 +307,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Barcode padding in pixels', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_img_padding',
+					'custom_attributes' => array( 'maxlength' => 3 ),
 					'default' 	  => '20',
 					'placeholder' => '20',
 					'desc_tip'=> true
@@ -298,6 +318,7 @@ class Wsb_Hub3_Admin {
 					'class' 	  		 => 'wsb-color-field',
                     'desc'        		 => __( 'Barcode color', 'wsb-hub3' ),
                     'id'          		 => 'wsb_hub3_img_color',
+					'custom_attributes'  => array( 'maxlength' => 7 ),
 					'data-default-color' => '#000000',
 					'default' => '#000000',
                     'desc_tip'=> true,
@@ -324,6 +345,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Recipient name', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_name',
+					'custom_attributes' => array( 'maxlength' => Wsb_Hub3_Validator::RECEIVER_NAME_MAX, 'data-wsb-counter' => '1' ),
 					'default' 	  => '',
 					'desc_tip'=> true
 				),
@@ -332,6 +354,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Recipient address', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_address',
+					'custom_attributes' => array( 'maxlength' => Wsb_Hub3_Validator::RECEIVER_ADDRESS_MAX, 'data-wsb-counter' => '1' ),
 					'default' 	  => '',
 					'desc_tip'=> true
 				),
@@ -340,6 +363,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Recipient postcode (5 digits)', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_postcode',
+					'custom_attributes' => array( 'maxlength' => 5, 'pattern' => '[0-9]{5}', 'inputmode' => 'numeric', 'data-wsb-mask' => 'digits', 'title' => __( 'Recipient postcode (5 digits)', 'wsb-hub3' ) ),
 					'default' 	  => '',
 					'placeholder' => '00000',
 					'desc_tip'=> true
@@ -349,6 +373,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Recipient city', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_city',
+					'custom_attributes' => array( 'maxlength' => Wsb_Hub3_Validator::RECEIVER_CITY_MAX, 'data-wsb-counter' => '1' ),
 					'default' 	  => '',
 					'desc_tip'=> true
                 ),
@@ -357,16 +382,23 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'IBAN', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_iban',
+					// No maxlength: the browser would cut a pasted IBAN with spaces before the mask removes them.
+					'custom_attributes' => array( 'pattern' => '[A-Z]{2}[0-9]{19}', 'data-wsb-mask' => 'iban', 'autocomplete' => 'off', 'spellcheck' => 'false', 'title' => __( 'IBAN is not valid', 'wsb-hub3' ) ),
 					'default' 	  => 'HR0000000000000000000',
 					'desc_tip'=> true
 				),
 				'wsb_hub3_receiver_model' => array(
                     'name'        => __( 'Model', 'wsb-hub3' ),
-                    'type'        => 'text',
-                    'desc'        => __( 'Payment model (2 digits)', 'wsb-hub3' ),
+                    'type'        => 'select',
+                    'class'       => 'wsb-hub3-admin-tab-field',
+                    'desc'        => __( 'Payment model according to FINA rules. HR01 adds a check digit to the reference, HR99 is used without a reference.', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_model',
-					'default' 	  => '',
-					'placeholder' => '00',
+                    'options'     => array(
+						'00' => __( 'HR00 - without check digit', 'wsb-hub3' ),
+						'01' => __( 'HR01 - with check digit', 'wsb-hub3' ),
+						'99' => __( 'HR99 - without reference', 'wsb-hub3' ),
+					),
+					'default' 	  => '00',
 					'desc_tip'=> true
 				),
 				'wsb_hub3_receiver_reference' => array(
@@ -407,6 +439,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Numeric value up to 6 digits', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_reference_prefix',
+					'custom_attributes' => array( 'maxlength' => 6, 'pattern' => '[0-9]{1,6}', 'inputmode' => 'numeric', 'data-wsb-mask' => 'digits', 'title' => __( 'Numeric value up to 6 digits', 'wsb-hub3' ) ),
 					'default' 	  => '',
 					'placeholder' => '000000',
 					'desc_tip'=> true
@@ -416,15 +449,22 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'Numeric value up to 6 digits', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_reference_sufix',
+					'custom_attributes' => array( 'maxlength' => 6, 'pattern' => '[0-9]{1,6}', 'inputmode' => 'numeric', 'data-wsb-mask' => 'digits', 'title' => __( 'Numeric value up to 6 digits', 'wsb-hub3' ) ),
 					'default' 	  => '',
 					'placeholder' => '000000',
 					'desc_tip'=> true
+				),
+				'wsb_hub3_reference_preview' => array(
+					'title' => __( 'Reference preview', 'wsb-hub3' ),
+					'type'  => 'info',
+					'text'  => '<span id="wsb-hub3-reference-preview" class="wsb-hub3-reference-preview"></span>',
 				),
 				'wsb_hub3_payment_purpose' => array(
                     'name'        => __( 'Purpose code', 'wsb-hub3' ),
                     'type'        => 'text',
                     'desc'        => __( 'Payment purpose code. Format: 4 capital letters.', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_payment_purpose',
+					'custom_attributes' => array( 'maxlength' => 4, 'pattern' => '[A-Z]{4}', 'data-wsb-mask' => 'upper', 'list' => 'wsb-hub3-purpose-codes', 'autocomplete' => 'off', 'title' => __( 'Payment purpose code. Format: 4 capital letters.', 'wsb-hub3' ) ),
 					'default' 	  => '',
 					'placeholder' => 'OTHR',
 					'desc_tip'=> true
@@ -434,6 +474,7 @@ class Wsb_Hub3_Admin {
                     'type'        => 'text',
                     'desc'        => __( 'You can use placeholder for Order ID: [order]', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_payment_description',
+					'custom_attributes' => array( 'maxlength' => 35, 'data-wsb-counter' => '1' ),
 					'default' 	  => __( 'Payment for Order [order]', 'wsb-hub3' ),
 					'placeholder' => __( 'Order payment', 'wsb-hub3' )
 				),
@@ -506,6 +547,24 @@ class Wsb_Hub3_Admin {
 
 		$receiver_settings = $this->wsb_hub3_receiver_settings();
 
+		// Pasted text may contain decomposed letters (Z + combining caron) or non-breaking spaces.
+		foreach ( array( 'wsb_hub3_receiver_name', 'wsb_hub3_receiver_address', 'wsb_hub3_receiver_city' ) as $field ) {
+			if ( isset( $_POST[ $field ] ) ) {
+				$value = (string) $_POST[ $field ];
+				if ( class_exists( 'Normalizer' ) ) {
+					$value = Normalizer::normalize( $value, Normalizer::FORM_C ) ?: $value;
+				}
+				$_POST[ $field ] = preg_replace( '/[\s\x{00A0}\x{2000}-\x{200B}\x{202F}\x{FEFF}]+/u', ' ', $value ) ?? $value;
+			}
+		}
+		// Same clean-up as the input masks, for browsers without JavaScript.
+		if ( isset( $_POST['wsb_hub3_receiver_iban'] ) ) {
+			$_POST['wsb_hub3_receiver_iban'] = strtoupper( preg_replace( '/\s+/', '', (string) $_POST['wsb_hub3_receiver_iban'] ) );
+		}
+		if ( isset( $_POST['wsb_hub3_payment_purpose'] ) ) {
+			$_POST['wsb_hub3_payment_purpose'] = strtoupper( trim( (string) $_POST['wsb_hub3_payment_purpose'] ) );
+		}
+
 		if (isset($_POST['wsb_hub3_receiver_name'])) {
 			$name = $this->validator->is_valid_receiver_name(sanitize_text_field($_POST['wsb_hub3_receiver_name']));
 			if(!$name) {
@@ -574,8 +633,24 @@ class Wsb_Hub3_Admin {
 		}
 		if (isset($_POST['wsb_hub3_receiver_reference_date'])) {
 			$reference_date = $this->validator->is_valid_reference_date(sanitize_text_field($_POST['wsb_hub3_receiver_reference_date']));
-			if(!$reference) {	
+			if(!$reference_date) {	
 				unset($receiver_settings['wsb_hub3_receiver_reference_date']);
+			}
+		}
+
+		$posted = function ( $key ) {
+			return isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+		};
+		$parts_ok = $this->validator->is_valid_reference_parts(
+			$posted( 'wsb_hub3_receiver_model' ),
+			$posted( 'wsb_hub3_receiver_reference_prefix' ),
+			$posted( 'wsb_hub3_receiver_reference' ),
+			$posted( 'wsb_hub3_receiver_reference_sufix' )
+		);
+		if ( ! $parts_ok ) {
+			// Keep the previous reference layout rather than saving one that banks would reject.
+			foreach ( array( 'wsb_hub3_receiver_model', 'wsb_hub3_receiver_reference', 'wsb_hub3_receiver_reference_date', 'wsb_hub3_receiver_reference_prefix', 'wsb_hub3_receiver_reference_sufix' ) as $key ) {
+				unset( $receiver_settings[ $key ] );
 			}
 		}
 
@@ -724,6 +799,120 @@ class Wsb_Hub3_Admin {
 		foreach ($this->validator->wsb_notices as $notice) {
 			echo '<div class="notice notice-' .esc_html($notice['type']). '"><p>' . esc_html($notice['message']) . '</p></div>';
 		}
+
+		// Older versions allowed longer values; the barcode API rejects them.
+		if ( $recipient_name && current_user_can( 'manage_woocommerce' ) ) {
+			$problems = array();
+			$limits   = array(
+				'wsb_hub3_receiver_name'    => array( __( 'Recipient', 'wsb-hub3' ), Wsb_Hub3_Validator::RECEIVER_NAME_MAX ),
+				'wsb_hub3_receiver_address' => array( __( 'Address', 'wsb-hub3' ), Wsb_Hub3_Validator::RECEIVER_ADDRESS_MAX ),
+				'wsb_hub3_receiver_city'    => array( __( 'City', 'wsb-hub3' ), Wsb_Hub3_Validator::RECEIVER_CITY_MAX ),
+			);
+			$too_long = array();
+			foreach ( $limits as $option => $limit ) {
+				$length = mb_strlen( (string) get_option( $option ) );
+				if ( $length > $limit[1] ) {
+					$too_long[] = sprintf( '%s (%d/%d)', $limit[0], $length, $limit[1] );
+				}
+			}
+			if ( $too_long ) {
+				/* translators: %s: list of fields with current/maximum length, e.g. "Recipient (27/25)" */
+				$problems[] = sprintf( __( 'HUB3 barcodes can not be generated because some recipient data is longer than the HUB-3 standard allows: %s. Please shorten it.', 'wsb-hub3' ), implode( ', ', $too_long ) );
+			}
+
+			$saved_model = (string) get_option( 'wsb_hub3_receiver_model' );
+			if ( '' !== $saved_model && ! in_array( $saved_model, Wsb_Hub3_Validator::MODELS, true ) ) {
+				/* translators: %s: saved payment model number */
+				$problems[] = sprintf( __( 'Payment model HR%s is not supported. HR00 is used until you choose HR00, HR01 or HR99.', 'wsb-hub3' ), $saved_model );
+			}
+
+			$example = $this->reference_example( $this->saved_reference_settings(), $changes );
+			// Non-digit order numbers can't be fixed in these settings, so they only get an order note.
+			$changes = array_diff( $changes, array( 'digits' ) );
+			if ( $changes ) {
+				/* translators: 1: payment reference for the latest order, 2: explanation of the changes */
+				$problems[] = sprintf( __( 'With the current settings the HUB3 payment reference for the latest order is adjusted to %1$s. %2$s Please change the reference settings.', 'wsb-hub3' ), $example, implode( ' ', Wsb_Hub3_Validator::reference_change_messages( $changes ) ) );
+			}
+
+			$url = admin_url( 'admin.php?page=wc-settings&tab=wsb_hub3_admin_tab&section=receiver' );
+			foreach ( $problems as $message ) {
+				echo '<div class="notice notice-error"><p>' . esc_html( $message ) . ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Edit recipient settings', 'wsb-hub3' ) . '</a></p></div>';
+			}
+		}
+	}
+
+	private function saved_reference_settings() {
+		return array(
+			'model'       => Wsb_Hub3_Validator::receiver_model(),
+			'prefix'      => (string) get_option( 'wsb_hub3_receiver_reference_prefix' ),
+			'format'      => get_option( 'wsb_hub3_receiver_reference', 'orderid' ),
+			'date_format' => get_option( 'wsb_hub3_receiver_reference_date', 'ddmmyyyy' ),
+			'sufix'       => (string) get_option( 'wsb_hub3_receiver_reference_sufix' ),
+		);
+	}
+
+	/**
+	 * Payment reference the given settings produce for the latest order, dated today.
+	 */
+	private function reference_example( $settings, &$changes = null, &$order_number = null ) {
+		$latest       = wc_get_orders( array( 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
+		$order_number = $latest ? (string) $latest[0]->get_order_number() : '1';
+		return Wsb_Hub3_Validator::build_reference(
+			$settings['model'],
+			$settings['prefix'],
+			$settings['format'],
+			Wsb_Hub3_Validator::reference_date( $settings['date_format'], time() ),
+			$order_number,
+			$settings['sufix'],
+			$changes
+		);
+	}
+
+	/**
+	 * AJAX: live preview of the payment reference for unsaved recipient settings.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_reference_preview() {
+		check_ajax_referer( 'wsb_hub3_reference_preview' );
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			wp_send_json_error( null, 403 );
+		}
+		$posted   = function ( $key ) {
+			return isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
+		};
+		$settings = array(
+			'model'       => in_array( $posted( 'model' ), Wsb_Hub3_Validator::MODELS, true ) ? $posted( 'model' ) : '00',
+			'prefix'      => substr( preg_replace( '/\D/', '', $posted( 'prefix' ) ), 0, 6 ),
+			'format'      => $posted( 'format' ),
+			'date_format' => $posted( 'date_format' ),
+			'sufix'       => substr( preg_replace( '/\D/', '', $posted( 'sufix' ) ), 0, 6 ),
+		);
+
+		$validator = new Wsb_Hub3_Validator();
+		$validator->is_valid_reference_parts( $settings['model'], $settings['prefix'], $settings['format'], $settings['sufix'] );
+		$problems  = wp_list_pluck( $validator->wsb_notices, 'message' );
+		$reference = $this->reference_example( $settings, $changes, $order_number );
+
+		if ( '99' === $settings['model'] ) {
+			$note = __( 'HR99 is used without a reference.', 'wsb-hub3' );
+		} else {
+			/* translators: %s: latest order number */
+			$note = sprintf( __( 'Example for the latest order %s, dated today.', 'wsb-hub3' ), $order_number );
+		}
+		if ( in_array( 'digits', $changes, true ) ) {
+			$note .= ' ' . implode( ' ', Wsb_Hub3_Validator::reference_change_messages( array( 'digits' ) ) );
+		}
+		// The part-count error above already explains any 'parts' change.
+		$changes  = array_diff( $changes, $problems ? array( 'digits', 'parts' ) : array( 'digits' ) );
+		$problems = array_merge( $problems, Wsb_Hub3_Validator::reference_change_messages( $changes ) );
+
+		wp_send_json_success( array(
+			'reference' => trim( 'HR' . $settings['model'] . ' ' . $reference ),
+			'length'    => strlen( $reference ),
+			'max'       => '99' === $settings['model'] ? 0 : Wsb_Hub3_Validator::REFERENCE_MAX,
+			'problems'  => $problems,
+			'note'      => $note,
+		) );
 	}
 
 }

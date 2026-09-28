@@ -151,6 +151,7 @@ class Wsb_Hub3 {
 		$this->loader->add_action( 'woocommerce_settings_wsb_hub3_admin_tab', $plugin_admin, 'wsb_hub3_output_settings'  );
 		$this->loader->add_action( 'woocommerce_settings_save_wsb_hub3_admin_tab', $plugin_admin, 'wsb_hub3_save' );
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'wsb_hub3_notice' );
+		$this->loader->add_action( 'wp_ajax_wsb_hub3_reference_preview', $plugin_admin, 'wsb_hub3_reference_preview' );
 		
 
 	}
