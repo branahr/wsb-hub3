@@ -229,6 +229,13 @@ class Wsb_Hub3_Admin {
                     'desc'    => __( 'Send barcode to admin in email', 'wsb-hub3' ),
                     'id'      => 'wsb_hub3_send_admin_barcode',
                 ),
+				'wsb_hub3_email_embed_images' => array(
+                    'name'    => __( 'Embed images in emails', 'wsb-hub3' ),
+                    'type'    => 'checkbox',
+                    'default' => 'yes',
+                    'desc'    => __( 'Send slip and barcode inside the email instead of linking to images on the website. Images then also show when the website is not reachable, e.g. behind Cloudflare "Under attack" mode. Turn off only if your email plugin does not support embedded images.', 'wsb-hub3' ),
+                    'id'      => 'wsb_hub3_email_embed_images',
+                ),
 				'wsb_hub3_slip_width' => array(
                     'name'        => __( 'HUB-3A slip width', 'wsb-hub3' ),
                     'type'        => 'text',
@@ -769,6 +776,11 @@ class Wsb_Hub3_Admin {
 				unset($general_settings['wsb_hub3_send_admin_barcode']);
 			}
 		}
+		if (isset($_POST['wsb_hub3_email_embed_images'])) {
+			if(!$this->validator->is_valid_checkbox(sanitize_text_field($_POST['wsb_hub3_email_embed_images']))) {
+				unset($general_settings['wsb_hub3_email_embed_images']);
+			}
+		}
 
 		woocommerce_update_options( $general_settings );
 	}
@@ -838,6 +850,19 @@ class Wsb_Hub3_Admin {
 			foreach ( $problems as $message ) {
 				echo '<div class="notice notice-error"><p>' . esc_html( $message ) . ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Edit recipient settings', 'wsb-hub3' ) . '</a></p></div>';
 			}
+		}
+	}
+
+	/**
+	 * Moves images from the plugin folder (used before 3.1.0) to uploads, in batches on admin page loads.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_migrate_files() {
+		if ( 'done' === get_option( 'wsb_hub3_files_migrated' ) || ! function_exists( 'wc_get_order' ) ) {
+			return;
+		}
+		if ( Wsb_Hub3_Files::migrate_legacy() ) {
+			update_option( 'wsb_hub3_files_migrated', 'done' );
 		}
 	}
 

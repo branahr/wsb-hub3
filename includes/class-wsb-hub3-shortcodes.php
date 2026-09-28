@@ -51,7 +51,7 @@ class Wsb_Hub3_Shortcodes {
 			}
 			if ($order_id == 0 ) return;
 			$order = wc_get_order( $order_id );
-			if(!$order) return;
+			if(!$order || !self::can_view( $order )) return;
 			$country = $order->get_billing_country();
 			$status_to_display = str_replace("wc-", "", get_option( 'wsb_hub3_order_status', 'on-hold' ));
 			$croatian_only = esc_html(get_option( 'wsb_hub3_croatian_customers_only', 'no' ));
@@ -66,14 +66,11 @@ class Wsb_Hub3_Shortcodes {
 				return;
 			}
 			$slip_width = $a['width'] . "px";
-				if (OrderUtil::custom_orders_table_usage_is_enabled()) {
-					$hub3_image = $order->get_meta('_wsb_hub3_slip');
-				} else {
-					$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
-				}
+				$order = apply_filters( 'wsb_hub3_order_images', $order );
+				$hub3_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_slip') );
 				
 				if($hub3_image){
-					$html="<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' alt='HUB-3A' /></a></div>";
+					$html="<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url( $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url( $hub3_image ) ."' alt='HUB-3A' /></a></div>";
 				}
 		}
 		return $html;
@@ -101,7 +98,7 @@ class Wsb_Hub3_Shortcodes {
 			}
 			if ($order_id == 0 ) return;
 			$order = wc_get_order( $order_id );
-			if(!$order) return;
+			if(!$order || !self::can_view( $order )) return;
 			$country = $order->get_billing_country();
 			$croatian_only = esc_html(get_option( 'wsb_hub3_croatian_customers_only', 'no' ));
 			if( "yes" == $croatian_only ){
@@ -115,18 +112,28 @@ class Wsb_Hub3_Shortcodes {
 			if( 'bacs' != $payment_method || $status_to_display != $order_status) {
 				return;
 			}
-			if (OrderUtil::custom_orders_table_usage_is_enabled()) {
-				$barcode_image = $order->get_meta('_wsb_hub3_barcode');
-			} else {
-				$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-			}
+			$order = apply_filters( 'wsb_hub3_order_images', $order );
+			$barcode_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_barcode') );
 			$barcode_width = $a['width'] . "px";
 			if($barcode_image){
-				$html.="<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image ) ."' alt='barcode' /></p>";
+				$html.="<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></p>";
 			}
 		}
 		return $html;
 
+	}
+
+	/**
+	 * The order ID comes from the URL, so only show payer data with the order key or to the logged-in owner.
+	 * @since    3.1.0
+	 */
+	private static function can_view( $order ) {
+		$key = isset( $_GET['key'] ) ? wc_clean( wp_unslash( $_GET['key'] ) ) : '';
+		if ( '' !== $key && $order->key_is_valid( $key ) ) {
+			return true;
+		}
+		$customer_id = (int) $order->get_customer_id();
+		return $customer_id > 0 && get_current_user_id() === $customer_id;
 	}
 
 }

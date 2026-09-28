@@ -48,6 +48,9 @@ class Wsb_Hub3_Public {
 
 	protected $hpos;
 
+	// Images to embed in the email being sent: content ID => file path.
+	private $email_images = array();
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -228,8 +231,12 @@ class Wsb_Hub3_Public {
 			$notes[] = sprintf( __( 'HUB3 payment reference was adjusted to FINA rules: %1$s. %2$s', 'wsb-hub3' ), $receiver_reference, implode( ' ', Wsb_Hub3_Validator::reference_change_messages( $reference_changes ) ) );
 		}
 
-		$barcode_file = 'barcode_' . $order_id . '.' . $img_type;
-		$barcode_path = plugin_dir_path( __DIR__ ) . 'barcodes/' . $barcode_file;
+		$previous_barcode = (string) $order->get_meta( '_wsb_hub3_barcode' );
+		$barcode_file = Wsb_Hub3_Files::name( $order, 'barcode', $img_type );
+		$barcode_path = Wsb_Hub3_Files::path( $barcode_file );
+		if ( '' !== $previous_barcode && $previous_barcode !== $barcode_file && Wsb_Hub3_Files::exists( $previous_barcode ) ) {
+			unlink( Wsb_Hub3_Files::path( $previous_barcode ) );
+		}
 		if ( is_wp_error( $barcode ) || 200 !== (int) wp_remote_retrieve_response_code( $barcode ) ) {
 			if ( is_wp_error( $barcode ) ) {
 				$error = $barcode->get_error_message();
@@ -303,11 +310,8 @@ class Wsb_Hub3_Public {
 			echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_description_text' )). "</p>";
 		}
 
-		if ($this->hpos) {
-			$barcode_image = $order->get_meta('_wsb_hub3_barcode');
-		} else {
-			$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-		}
+		$order = $this->ensure_images( $order );
+		$barcode_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_barcode') );
 		$slip_width = get_option( 'wsb_hub3_slip_width', 800 ) . "px";
 		$barcode_width = get_option( 'wsb_hub3_barcode_width', 400 ) . "px";
 
@@ -315,27 +319,22 @@ class Wsb_Hub3_Public {
 			echo $this->get_data_html($order_id);
 		}
 		if("hub3" == $display_param){
-			if ($this->hpos) {
-				$hub3_image = $order->get_meta('_wsb_hub3_slip');
-			} else {
-				$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
-			}
-			//var_dump($barcode_image);
+			$hub3_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_slip') );
 			if($hub3_image){
-				echo "<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' alt='HUB-3A' /></a></div>";
+				echo "<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url( $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url( $hub3_image ) ."' alt='HUB-3A' /></a></div>";
 			}
 			if($barcode_image){
 				echo "<p class='barcode-text'><button id='barcode_toggler' class='btn'>" . __( 'Show larger barcode', 'wsb-hub3' ) . "</button></p>";
 				echo "<div id='barcodediv' class='barcodediv'>";
 				echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_barcode_text' )). "</p>";
-				echo "<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image ) ."' alt='barcode' /></p></div>";
+				echo "<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></p></div>";
 			}
 		}
 
 		if("html" == $display_param || "barcode" == $display_param){
 			if($barcode_image){
 				echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_barcode_text' )). "</p>";
-				echo "<div class='barcodediv'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image ) ."' alt='barcode' /></div>";
+				echo "<div class='barcodediv'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></div>";
 			}
 		}
 		
@@ -363,11 +362,8 @@ class Wsb_Hub3_Public {
 		if("barcode" != $display_param){ // Hide payment description if set to display barcode only
 			echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_description_text' )). "</p>";
 		}
-		if ($this->hpos) {
-			$barcode_image = $order->get_meta('_wsb_hub3_barcode');
-		} else {
-			$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-		}
+		$order = $this->ensure_images( $order );
+		$barcode_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_barcode') );
 		$slip_width = get_option( 'wsb_hub3_slip_width', 800 ) . "px";
 		$barcode_width = get_option( 'wsb_hub3_barcode_width', 400 ) . "px";
 		
@@ -376,26 +372,22 @@ class Wsb_Hub3_Public {
 			echo $this->get_data_html($order_id);
 		}
 		if("hub3" == $display_param){
-			if ($this->hpos) {
-				$hub3_image = $order->get_meta('_wsb_hub3_slip');
-			} else {
-				$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
-			}
+			$hub3_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_slip') );
 			if($hub3_image){
-				echo "<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image ) ."' alt='HUB-3A' /></a></div>";
+				echo "<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url( $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url( $hub3_image ) ."' alt='HUB-3A' /></a></div>";
 			}
 			if($barcode_image){
 				echo "<p class='barcode-text'><button id='barcode_toggler' class='btn'><span class='barcode_btn_text'>" . __( 'Show larger barcode', 'wsb-hub3' ) . "</span></button></p>";
 				echo "<div id='barcodediv' class='barcodediv'>";
 				echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_barcode_text' )). "</p>";
-				echo "<img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image ) ."' alt='barcode' /></div>";
+				echo "<img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></div>";
 			}
 		}
 
 		if("html" == $display_param || "barcode" == $display_param){
 			if($barcode_image){
 				echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_barcode_text' )). "</p>";
-				echo "<div class='barcodediv'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . esc_html($barcode_image )) ."' alt='barcode' /></div>";
+				echo "<div class='barcodediv'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></div>";
 			}
 		}
 
@@ -411,18 +403,13 @@ class Wsb_Hub3_Public {
 				$payment_method = $order->get_payment_method();
 				$country = $order->get_billing_country();
 				if( ('yes' == $croatian_only && 'HR' == $country && 'bacs' == $payment_method ) || ('no' == $croatian_only && 'bacs' == $payment_method ) ){
-					$img_version = date('His'); //added versioning for images to avoid sending of cached images via email on order update
-	
+					$order = $this->ensure_images( $order );
 					$display_param = esc_html(get_option( 'wsb_hub3_display_details_email', 'hub3' ));
 	
 					if("barcode" != $display_param){ // Hide payment description if set to display barcode only
 						echo "<p style='text-align:center;'>" . wptexturize(get_option( 'wsb_hub3_description_text' )). "</p>";
 					}
-					if ($this->hpos) {
-						$barcode_image = $order->get_meta('_wsb_hub3_barcode');
-					} else {
-						$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-					}
+					$barcode_image = $this->email_image_src( $order->get_meta('_wsb_hub3_barcode'), 'barcode', $order_id );
 					$slip_width = get_option( 'wsb_hub3_slip_width_email', 560 );
 					$barcode_width = get_option( 'wsb_hub3_barcode_width_email', 400 );
 	
@@ -431,19 +418,15 @@ class Wsb_Hub3_Public {
 						echo $this->get_data_html($order_id);
 					}
 					if("hub3" == $display_param){
-						if ($this->hpos) {
-							$hub3_image = $order->get_meta('_wsb_hub3_slip');
-						} else {
-							$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
-						}
+						$hub3_image = $this->email_image_src( $order->get_meta('_wsb_hub3_slip'), 'slip', $order_id );
 						if($hub3_image){
-							echo "<div style='text-align:center;'><img width='". esc_html($slip_width) . "' style='margin: 0 auto; width: " . esc_html($slip_width . "px") . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image . "?ver=" . $img_version ) ."' alt='HUB-3A' /></div>";
+							echo "<div style='text-align:center;'><img width='". esc_html($slip_width) . "' style='margin: 0 auto; width: " . esc_html($slip_width . "px") . "' src='". esc_attr( $hub3_image ) ."' alt='HUB-3A' /></div>";
 						}
 					}
 			
 					if($barcode_image){
 						echo "<p style='text-align:center;'>" . wptexturize(get_option( 'wsb_hub3_barcode_text' )). "</p>";
-						echo "<div style='text-align:center;'><img width='". esc_html($barcode_width) . "' style='margin: 0 auto; width: " . esc_html($barcode_width  . "px" ) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image . "?ver=" . $img_version ) ."' alt='barcode' /></div>";
+						echo "<div style='text-align:center;'><img width='". esc_html($barcode_width) . "' style='margin: 0 auto; width: " . esc_html($barcode_width  . "px" ) . "' src='". esc_attr( $barcode_image ) ."' alt='barcode' /></div>";
 					}	
 				}
 
@@ -456,31 +439,22 @@ class Wsb_Hub3_Public {
 				$country = $order->get_billing_country();
 				
 				if( ('yes' == $croatian_only && 'HR' == $country && 'bacs' == $payment_method ) || ('no' == $croatian_only && 'bacs' == $payment_method ) ) {
-	
-					$img_version = date('His'); //added versioning for images to avoid sending of cached images via email on order update
-					if ($this->hpos) {
-						$barcode_image = $order->get_meta('_wsb_hub3_barcode');
-					} else {
-						$barcode_image = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-					}
+					$order = $this->ensure_images( $order );
+					$barcode_image = $this->email_image_src( $order->get_meta('_wsb_hub3_barcode'), 'barcode', $order_id );
 					$slip_width = get_option( 'wsb_hub3_slip_width_email', 560 );
 					$barcode_width = get_option( 'wsb_hub3_barcode_width_email', 400 );
 					$send_slip = esc_html(get_option( 'wsb_hub3_send_admin_slip', 'no' ));
 					if($send_slip == "yes"){
-						if ($this->hpos) {
-							$hub3_image = $order->get_meta('_wsb_hub3_slip');
-						} else {
-							$hub3_image = get_post_meta( $order_id, '_wsb_hub3_slip', true );
-						}
+						$hub3_image = $this->email_image_src( $order->get_meta('_wsb_hub3_slip'), 'slip', $order_id );
 						if($hub3_image){
-							echo "<div style='text-align:center;'><img width='". esc_html($slip_width) . "' style='margin: 0 auto; width: " . esc_html($slip_width . "px") . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $hub3_image . "?ver=" . $img_version ) ."' alt='HUB-3A' /></div>";
+							echo "<div style='text-align:center;'><img width='". esc_html($slip_width) . "' style='margin: 0 auto; width: " . esc_html($slip_width . "px") . "' src='". esc_attr( $hub3_image ) ."' alt='HUB-3A' /></div>";
 						}
 					}
 			
 					$send_barcode = esc_html(get_option( 'wsb_hub3_send_admin_barcode', 'no' ));
 					if($send_barcode == "yes"){
 						if($barcode_image){
-							echo "<div style='text-align:center;'><img width='". esc_html($barcode_width) . "' style='margin: 0 auto; width: " . esc_html($barcode_width  . "px" ) . "' src='". esc_url(plugin_dir_url( __DIR__ ) . "barcodes/" . $barcode_image . "?ver=" . $img_version ) ."' alt='barcode' /></div>";
+							echo "<div style='text-align:center;'><img width='". esc_html($barcode_width) . "' style='margin: 0 auto; width: " . esc_html($barcode_width  . "px" ) . "' src='". esc_attr( $barcode_image ) ."' alt='barcode' /></div>";
 						}
 					}
 					
@@ -488,6 +462,53 @@ class Wsb_Hub3_Public {
 			}
 		}
 		
+	}
+
+	/**
+	 * Recreates a missing barcode or slip, e.g. for orders whose images a plugin update deleted before 3.1.0.
+	 * Returns the order with fresh meta.
+	 * @since    3.1.0
+	 */
+	public function ensure_images( $order ) {
+		$missing = ! Wsb_Hub3_Files::exists( $order->get_meta( '_wsb_hub3_barcode' ) ) || ! Wsb_Hub3_Files::exists( $order->get_meta( '_wsb_hub3_slip' ) );
+		$lock    = 'wsb_hub3_regenerate_' . $order->get_id();
+		if ( ! $missing || get_transient( $lock ) ) {
+			return $order;
+		}
+		// Retry at most hourly, so a failing barcode service isn't called on every page view.
+		set_transient( $lock, 1, HOUR_IN_SECONDS );
+		$this->wsb_hub3_admin_order_update( $order->get_id(), $order );
+		return wc_get_order( $order->get_id() );
+	}
+
+	/**
+	 * Image source for emails: an embedded image (cid:) when enabled, otherwise the file URL.
+	 * Embedded images don't depend on the website, so they also work behind Cloudflare "Under attack" mode.
+	 */
+	private function email_image_src( $file, $type, $order_id ) {
+		if ( ! Wsb_Hub3_Files::exists( $file ) ) {
+			return '';
+		}
+		if ( 'no' === get_option( 'wsb_hub3_email_embed_images', 'yes' ) ) {
+			return Wsb_Hub3_Files::url( $file );
+		}
+		$cid                        = 'wsb-hub3-' . $type . '-' . $order_id;
+		$this->email_images[ $cid ] = Wsb_Hub3_Files::path( $file );
+		return 'cid:' . $cid;
+	}
+
+	/**
+	 * Attaches the images referenced in the email body as inline images.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_embed_email_images( $phpmailer ) {
+		foreach ( $this->email_images as $cid => $path ) {
+			// Emails rendered but not sent (e.g. previews) must not add their images to the next email.
+			if ( false !== strpos( (string) $phpmailer->Body, 'cid:' . $cid ) && is_file( $path ) ) {
+				$phpmailer->addEmbeddedImage( $path, $cid, basename( $path ) );
+			}
+		}
+		$this->email_images = array();
 	}
 
 	function get_reference($order_id, &$changes = null){
@@ -655,14 +676,8 @@ class Wsb_Hub3_Public {
 		$x_iban2 = 1080 - $bbox_iban2[4];
 		$this->imagettftextWsb($hub3a, 12, 0, $x_iban2, 162, $black, $font_times, $iban);
 
-		$img_path = rtrim(dirname(__DIR__), '/') . '/barcodes/';
-		
-		if ($this->hpos) {
-			$img_file = $order->get_meta('_wsb_hub3_barcode');
-		} else {
-			$img_file = get_post_meta( $order_id, '_wsb_hub3_barcode', true );
-		}
-		$barcode_big = $img_path . $img_file;
+		$img_file = (string) $order->get_meta( '_wsb_hub3_barcode' );
+		$barcode_big = Wsb_Hub3_Files::path( $img_file );
 		$barcode_resized = false;
 		$img_type = ( $img_file && is_file( $barcode_big ) ) ? getimagesize( $barcode_big ) : false;
 		if ( ! $img_type ) {
@@ -682,8 +697,12 @@ class Wsb_Hub3_Public {
 			imagecopy($hub3a, $barcode_resized, 31, 300, 0, 0, imagesx($barcode_resized), imagesy($barcode_resized));
 		}
 		
-		$hub3_image = "hub-3a-".$order_id.".jpg";
-		if(!imagejpeg($hub3a, plugin_dir_path( __DIR__ ) . "barcodes/".$hub3_image, 100)){
+		$previous_slip = (string) $order->get_meta( '_wsb_hub3_slip' );
+		$hub3_image = Wsb_Hub3_Files::name( $order, 'hub-3a', 'jpg' );
+		if ( '' !== $previous_slip && $previous_slip !== $hub3_image && Wsb_Hub3_Files::exists( $previous_slip ) ) {
+			unlink( Wsb_Hub3_Files::path( $previous_slip ) );
+		}
+		if(!imagejpeg($hub3a, Wsb_Hub3_Files::path( $hub3_image ), 100)){
 			$hub3_image = "";
 		}
 		imagedestroy($hub3a);
@@ -754,7 +773,6 @@ class Wsb_Hub3_Public {
 		$data['billing_city'] = $order->get_billing_city();
 		//var_dump($data);
 		$this->wsb_hub3_update_barcode_meta($order_id, $data);
-		$this->create_hub3($order_id);
 	}
 
 	/**

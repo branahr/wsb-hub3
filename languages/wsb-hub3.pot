@@ -659,3 +659,11 @@ msgstr ""
 #: admin/class-wsb-hub3-admin.php
 msgid "Commercial payment"
 msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Embed images in emails"
+msgstr ""
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Send slip and barcode inside the email instead of linking to images on the website. Images then also show when the website is not reachable, e.g. behind Cloudflare \"Under attack\" mode. Turn off only if your email plugin does not support embedded images."
+msgstr ""
