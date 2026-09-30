@@ -70,7 +70,7 @@ class Wsb_Hub3_Admin {
 	public function enqueue_styles() {
 
 		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wsb-hub3-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wsb-hub3-admin.css', array(), $this->version . '.' . filemtime( plugin_dir_path( __FILE__ ) . 'css/wsb-hub3-admin.css' ), 'all' );
 
 	}
 
@@ -81,7 +81,7 @@ class Wsb_Hub3_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-admin.js', array( 'wp-color-picker' ), $this->version, true);
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-admin.js', array( 'wp-color-picker' ), $this->version . '.' . filemtime( plugin_dir_path( __FILE__ ) . 'js/wsb-hub3-admin.js' ), true);
 		wp_localize_script( $this->plugin_name, 'wsbHub3', array(
 			'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 			'nonce'        => wp_create_nonce( 'wsb_hub3_reference_preview' ),
@@ -177,12 +177,13 @@ class Wsb_Hub3_Admin {
                     'name'    => __( 'Show on thankyou page', 'wsb-hub3' ),
                     'type'    => 'select',
                     'class'   => 'wsb-hub3-admin-tab-field',
-                    'desc'    => __( '', 'wsb-hub3' ),
+                    'desc'    => __( 'Choose "Nothing" if you show payment details with the [wsb_hub3] and [wsb_barcode] shortcodes, so they are not shown twice.', 'wsb-hub3' ),
                     'id'      => 'wsb_hub3_display_details_thankyou',
                     'options' => array(
                       'html'    => __( 'Html text + large barcode', 'wsb-hub3' ),
 					  'hub3' 	=> __( 'HUB-3A slip + large barcode', 'wsb-hub3' ),
 					  'barcode' => __( 'Large barcode only', 'wsb-hub3' ),
+					  'none'    => __( 'Nothing (use shortcodes)', 'wsb-hub3' ),
 					),
 					'default'     => 'hub3',
 					'desc_tip'    => false,
@@ -387,7 +388,7 @@ class Wsb_Hub3_Admin {
                 'wsb_hub3_receiver_iban' => array(
                     'name'        => __( 'IBAN', 'wsb-hub3' ),
                     'type'        => 'text',
-                    'desc'        => __( 'IBAN', 'wsb-hub3' ),
+                    'desc'        => __( 'Customers pay to the bank accounts of the Direct bank transfer payment method; with more than one account they choose at checkout. This IBAN is used only if Direct bank transfer has no valid account, and for orders placed before the customer could choose.', 'wsb-hub3' ),
                     'id'          => 'wsb_hub3_receiver_iban',
 					// No maxlength: the browser would cut a pasted IBAN with spaces before the mask removes them.
 					'custom_attributes' => array( 'pattern' => '[A-Z]{2}[0-9]{19}', 'data-wsb-mask' => 'iban', 'autocomplete' => 'off', 'spellcheck' => 'false', 'title' => __( 'IBAN is not valid', 'wsb-hub3' ) ),
@@ -849,6 +850,30 @@ class Wsb_Hub3_Admin {
 			$url = admin_url( 'admin.php?page=wc-settings&tab=wsb_hub3_admin_tab&section=receiver' );
 			foreach ( $problems as $message ) {
 				echo '<div class="notice notice-error"><p>' . esc_html( $message ) . ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Edit recipient settings', 'wsb-hub3' ) . '</a></p></div>';
+			}
+
+			$accounts = Wsb_Hub3_Public::bacs_accounts( $invalid );
+			$bacs_url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bacs' );
+			$bacs_link = ' <a href="' . esc_url( $bacs_url ) . '">' . esc_html__( 'Edit bank accounts', 'wsb-hub3' ) . '</a>';
+			// WooCommerce's own (translated) name, as shown in the Payments settings.
+			$gateways   = WC()->payment_gateways()->payment_gateways();
+			$bacs_title = isset( $gateways['bacs'] ) ? $gateways['bacs']->get_method_title() : 'BACS';
+			if ( $invalid ) {
+				/* translators: 1: payment method name, 2: names of bank accounts */
+				$message = sprintf( __( 'These bank accounts in the %1$s payment method have an invalid IBAN, so customers can\'t choose them for HUB3 payments: %2$s.', 'wsb-hub3' ), $bacs_title, implode( ', ', $invalid ) );
+				echo '<div class="notice notice-error"><p>' . esc_html( $message ) . $bacs_link . '</p></div>';
+			}
+			$settings_iban = (string) get_option( 'wsb_hub3_receiver_iban' );
+			// Only relevant while editing HUB3 settings, so it doesn't show on every admin page.
+			$on_hub3_tab = isset( $_GET['tab'] ) && 'wsb_hub3_admin_tab' === $_GET['tab'];
+			if ( $on_hub3_tab && $accounts && ! in_array( $settings_iban, wp_list_pluck( $accounts, 'iban' ), true ) ) {
+				$names = array();
+				foreach ( $accounts as $account ) {
+					$names[] = $account['account_name'] ?: ( $account['bank_name'] ?: $account['iban'] );
+				}
+				/* translators: 1: payment method name, 2: names of bank accounts, 3: IBAN from the HUB3 recipient settings */
+				$message = sprintf( __( 'Customers pay to the bank accounts set up in the %1$s payment method (%2$s). The IBAN %3$s in the HUB3 recipient settings is not one of them, so it is only used for orders placed before customers could choose an account.', 'wsb-hub3' ), $bacs_title, implode( ', ', $names ), trim( chunk_split( $settings_iban, 4, ' ' ) ) );
+				echo '<div class="notice notice-warning"><p>' . esc_html( $message ) . $bacs_link . '</p></div>';
 			}
 		}
 	}

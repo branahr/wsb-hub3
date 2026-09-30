@@ -32,6 +32,12 @@ class Wsb_Hub3_i18n {
 			dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages'
 		);
 
+		// A WordPress.org language pack lags behind new plugin versions, so bundled files fill in strings it lacks.
+		// The first loaded file wins: language pack first, bundled translations second.
+		$locale = determine_locale();
+		load_textdomain( 'wsb-hub3', WP_LANG_DIR . '/plugins/wsb-hub3-' . $locale . '.mo', $locale );
+		load_textdomain( 'wsb-hub3', dirname( __DIR__ ) . '/languages/wsb-hub3-' . $locale . '.mo', $locale );
+
 	}
 
 

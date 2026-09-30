@@ -73,8 +73,10 @@ class Wsb_Hub3_Public {
 	 */
 	public function enqueue_styles() {
 
+		// Registered everywhere, so shortcodes on other pages can load it.
+		wp_register_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wsb-hub3-public.css', array(), $this->version . '.' . filemtime( plugin_dir_path( __FILE__ ) . 'css/wsb-hub3-public.css' ), 'all' );
 		if(is_checkout() || is_account_page()){
-			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wsb-hub3-public.css', array(), $this->version, 'all' );
+			wp_enqueue_style( $this->plugin_name );
 		}
 		
 	}
@@ -86,7 +88,7 @@ class Wsb_Hub3_Public {
 	 */
 	public function enqueue_scripts() {
 		if(is_checkout() || is_account_page()){
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-public.js', array('jquery'), $this->version, false );
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wsb-hub3-public.js', array('jquery'), $this->version . '.' . filemtime( plugin_dir_path( __FILE__ ) . 'js/wsb-hub3-public.js' ), false );
 		}
 		
 
@@ -96,19 +98,12 @@ class Wsb_Hub3_Public {
 
 		$order = wc_get_order( $order_id );
 
-		if (isset($_POST['_wsb_barcode_iban'])) {
-			$iban = esc_attr( $_POST['_wsb_barcode_iban']);
-			if($this->validator->is_valid_iban(sanitize_text_field($iban))) {
-				$order->update_meta_data( '_wsb_barcode_iban', $iban);
-				//$order->save();
-				$order->save_meta_data();
-			}
+		// Classic checkout. The block checkout saves the choice in wsb_hub3_store_api_save_iban().
+		if ( doing_action( 'woocommerce_checkout_update_order_meta' ) && 'bacs' === $order->get_payment_method() ) {
+			$this->save_checkout_iban( $order, isset( $_POST['_wsb_barcode_iban'] ) ? sanitize_text_field( wp_unslash( $_POST['_wsb_barcode_iban'] ) ) : '' );
+			$order->save_meta_data();
 		}
-		if ($this->hpos) {
-			$receiver_iban = $order->get_meta('_wsb_barcode_iban');
-		} else {
-			$receiver_iban = get_post_meta( $order_id, '_wsb_barcode_iban', true );
-		}
+		$receiver_iban = (string) $order->get_meta('_wsb_barcode_iban');
 		if(!$receiver_iban) $receiver_iban = esc_html(get_option( 'wsb_hub3_receiver_iban' ));
 
 		$order_status = $order->get_status();
@@ -306,6 +301,10 @@ class Wsb_Hub3_Public {
 			return;
 		}
 		$display_param = esc_html(get_option( 'wsb_hub3_display_details_thankyou', 'hub3' ));
+		// Payment details are shown with the [wsb_hub3] and [wsb_barcode] shortcodes instead.
+		if ( 'none' === $display_param ) {
+			return;
+		}
 		if("barcode" != $display_param){ // Hide payment description if set to display barcode only
 			echo "<p class='barcode-text'>" . wptexturize(get_option( 'wsb_hub3_description_text' )). "</p>";
 		}
@@ -776,54 +775,148 @@ class Wsb_Hub3_Public {
 	}
 
 	/**
-	 * Checkout custom fields.
+	 * Direct bank transfer (BACS) accounts with a valid IBAN, which the customer can choose to pay to.
+	 * $invalid receives the names of accounts whose IBAN is not valid.
+	 * @since    3.1.0
+	 */
+	public static function bacs_accounts( &$invalid = null ) {
+		$invalid  = array();
+		$gateways = WC()->payment_gateways() ? WC()->payment_gateways()->payment_gateways() : array();
+		if ( empty( $gateways['bacs'] ) ) {
+			return array();
+		}
+		// A separate validator, so skipped accounts don't show up as settings errors.
+		$validator = new Wsb_Hub3_Validator();
+		$accounts  = array();
+		foreach ( (array) $gateways['bacs']->account_details as $account ) {
+			$iban = strtoupper( preg_replace( '/\s+/', '', (string) ( $account['iban'] ?? '' ) ) );
+			if ( '' === $iban || isset( $accounts[ $iban ] ) ) {
+				continue;
+			}
+			if ( ! $validator->is_valid_iban( $iban ) ) {
+				$invalid[] = (string) ( $account['account_name'] ?? $iban );
+				continue;
+			}
+			$accounts[ $iban ] = array(
+				'iban'         => $iban,
+				'account_name' => (string) ( $account['account_name'] ?? '' ),
+				'bank_name'    => (string) ( $account['bank_name'] ?? '' ),
+			);
+		}
+		return array_values( $accounts );
+	}
+
+	/**
+	 * "ZABA - Zagrebacka banka (HR46 2360 ...)" label for an account from bacs_accounts().
+	 */
+	public static function account_label( $account ) {
+		$name = implode( ' - ', array_filter( array( $account['account_name'], $account['bank_name'] ) ) );
+		return trim( $name . ' (' . trim( chunk_split( $account['iban'], 4, ' ' ) ) . ')' );
+	}
+
+	/**
+	 * Saves the IBAN chosen at checkout. Unknown values fall back to the first account, so a tampered request can't set another IBAN.
+	 */
+	private function save_checkout_iban( $order, $requested ) {
+		$ibans = wp_list_pluck( self::bacs_accounts(), 'iban' );
+		if ( ! $ibans ) {
+			return;
+		}
+		$requested = strtoupper( preg_replace( '/\s+/', '', (string) $requested ) );
+		$order->update_meta_data( '_wsb_barcode_iban', in_array( $requested, $ibans, true ) ? $requested : $ibans[0] );
+	}
+
+	/**
+	 * Lets the block checkout (Store API) send the chosen IBAN.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_register_store_api_data() {
+		if ( ! function_exists( 'woocommerce_store_api_register_endpoint_data' ) || ! class_exists( '\Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema' ) ) {
+			return;
+		}
+		woocommerce_store_api_register_endpoint_data( array(
+			'endpoint'        => \Automattic\WooCommerce\StoreApi\Schemas\V1\CheckoutSchema::IDENTIFIER,
+			'namespace'       => 'wsb-hub3',
+			'schema_callback' => function () {
+				return array(
+					'iban' => array(
+						'description' => __( 'Account to pay', 'wsb-hub3' ),
+						'type'        => array( 'string', 'null' ),
+						'context'     => array(),
+					),
+				);
+			},
+		) );
+	}
+
+	/**
+	 * Block checkout: runs before the order is saved, so the barcode is generated with the chosen IBAN.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_store_api_save_iban( $order, $request ) {
+		if ( 'bacs' !== $order->get_payment_method() ) {
+			return;
+		}
+		$extensions = (array) $request->get_param( 'extensions' );
+		$this->save_checkout_iban( $order, $extensions['wsb-hub3']['iban'] ?? '' );
+	}
+
+	/**
+	 * Adds the IBAN choice to the block checkout.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_register_checkout_block( $integration_registry ) {
+		require_once plugin_dir_path( __FILE__ ) . 'class-wsb-hub3-blocks-integration.php';
+		$integration_registry->register( new Wsb_Hub3_Blocks_Integration( $this->version ) );
+	}
+
+	/**
+	 * Lists the account chosen for the HUB3 payment first and marks it, on the thank-you page and in emails.
+	 * @since    3.1.0
+	 */
+	public function wsb_hub3_mark_chosen_account( $accounts, $order_id ) {
+		$order  = $order_id ? wc_get_order( $order_id ) : false;
+		$chosen = $order ? (string) $order->get_meta( '_wsb_barcode_iban' ) : '';
+		if ( '' === $chosen || count( (array) $accounts ) < 2 ) {
+			return $accounts;
+		}
+		foreach ( $accounts as $i => $account ) {
+			if ( strtoupper( preg_replace( '/\s+/', '', (string) ( $account['iban'] ?? '' ) ) ) === $chosen ) {
+				$account['account_name'] = trim( ( $account['account_name'] ?? '' ) . ' ' . __( '(selected for payment)', 'wsb-hub3' ) );
+				unset( $accounts[ $i ] );
+				array_unshift( $accounts, $account );
+				break;
+			}
+		}
+		return $accounts;
+	}
+
+	/**
+	 * Classic checkout: radio buttons with the bank accounts in the bank transfer description.
 	 *
 	 * @since    2.0
 	 */
-
 	function wsb_hub3_gateway_description( $description, $gateway_id ) {
-    if ( 'bacs' === $gateway_id ) {
-        $payment_method = WC()->payment_gateways->payment_gateways()[ 'bacs' ];
-        $accounts = array();
-
-        foreach ( $payment_method->account_details as $bank_account ) {
-            if ( empty( $bank_account['iban'] ) ) continue;
-            $accounts[ $bank_account['iban'] ] = $bank_account['account_name'];
-        }
-
-        // If we have IBANs from BACS to show
-        if ( ! empty( $accounts ) ) {
-            if ( count( $accounts ) == 1 ) {
-                // Single IBAN - hidden field
-                $account = key( $accounts );
-                $hidden_field = woocommerce_form_field( '_wsb_barcode_iban', array(
-                    'type'     => 'hidden',
-                    'class'    => array( 'barcode-iban-class hidden-field' ),
-                    'required' => true,
-					'default'  => $account,
-                ), $account );
-
-                return $description . $hidden_field;
-
-            } else {
-                // Multiple IBANs - show as select dropdown
-                $banks_dropdown = woocommerce_form_field( '_wsb_barcode_iban', array(
-                    'type'     => 'select',
-                    'class'    => array( 'barcode-iban-class form-row-wide' ),
-                    'label'    => __( 'Account to pay', 'wsb-hub3' ),
-                    'required' => true,
-					'return' => true,
-                    'options'  => $accounts,
-                ), '' );
-
-                return $description . $banks_dropdown;
-            }
-        }
-
-        return $description;
-    }
-
-    return $description;
-}
+		if ( 'bacs' !== $gateway_id || ! is_checkout() ) {
+			return $description;
+		}
+		$accounts = self::bacs_accounts();
+		// With one account there is nothing to choose; it is saved automatically.
+		if ( count( $accounts ) < 2 ) {
+			return $description;
+		}
+		$options = array();
+		foreach ( $accounts as $account ) {
+			$options[ $account['iban'] ] = self::account_label( $account );
+		}
+		return $description . woocommerce_form_field( '_wsb_barcode_iban', array(
+			'type'     => 'radio',
+			'class'    => array( 'wsb-hub3-iban-choice', 'form-row-wide' ),
+			'label'    => __( 'Account to pay', 'wsb-hub3' ),
+			'required' => true,
+			'return'   => true,
+			'options'  => $options,
+		), $accounts[0]['iban'] );
+	}
 
 }

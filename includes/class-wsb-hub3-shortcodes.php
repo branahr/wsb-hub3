@@ -39,41 +39,16 @@ class Wsb_Hub3_Shortcodes {
 			'width'	  => 1100
    		), $atts );
 
-		$html = '';
-
-		if(is_checkout()){
-			global $wp;
-			$order_id = 0;
-			if( isset($wp->query_vars['order-received']) ){
-				$order_id  = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
-			} else if ( isset($_REQUEST['order_id']) ){
-				$order_id  = absint($_REQUEST['order_id']);
-			}
-			if ($order_id == 0 ) return;
-			$order = wc_get_order( $order_id );
-			if(!$order || !self::can_view( $order )) return;
-			$country = $order->get_billing_country();
-			$status_to_display = str_replace("wc-", "", get_option( 'wsb_hub3_order_status', 'on-hold' ));
-			$croatian_only = esc_html(get_option( 'wsb_hub3_croatian_customers_only', 'no' ));
-			if( "yes" == $croatian_only ){
-				if('HR' != $country){
-					return;
-				}
-			}
-			$payment_method = $order->get_payment_method();
-			$order_status = $order->get_status();
-			if('bacs' != $payment_method || $status_to_display != $order_status ) {
-				return;
-			}
-			$slip_width = $a['width'] . "px";
-				$order = apply_filters( 'wsb_hub3_order_images', $order );
-				$hub3_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_slip') );
-				
-				if($hub3_image){
-					$html="<div class='slipdiv'><a title='" . __( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url( $hub3_image ) ."' target='new'><img style='width: " . esc_html($slip_width) . "' src='". esc_url( $hub3_image ) ."' alt='HUB-3A' /></a></div>";
-				}
+		$order = self::order_to_show();
+		if ( ! $order ) {
+			return '';
 		}
-		return $html;
+		$hub3_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_slip') );
+		if ( ! $hub3_image ) {
+			return '';
+		}
+		$slip_width = ( absint( $a['width'] ) ?: 1100 ) . 'px';
+		return "<div class='slipdiv'><a title='" . esc_attr__( 'Enlarge (New window)', 'wsb-hub3' ) . "' href='". esc_url( $hub3_image ) ."' target='new'><img style='width: " . esc_attr($slip_width) . "' src='". esc_url( $hub3_image ) ."' alt='HUB-3A' /></a></div>";
 
 	}
 
@@ -86,41 +61,45 @@ class Wsb_Hub3_Shortcodes {
 			'width'	  => 400
    		), $atts );
 
-		$html = '';
-
-		if(is_checkout()){
-			global $wp;
-			$order_id = 0;
-			if( isset($wp->query_vars['order-received']) ){
-				$order_id  = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
-			} else if ( isset($_REQUEST['order_id']) ){
-				$order_id  = absint($_REQUEST['order_id']);
-			}
-			if ($order_id == 0 ) return;
-			$order = wc_get_order( $order_id );
-			if(!$order || !self::can_view( $order )) return;
-			$country = $order->get_billing_country();
-			$croatian_only = esc_html(get_option( 'wsb_hub3_croatian_customers_only', 'no' ));
-			if( "yes" == $croatian_only ){
-				if('HR' != $country){
-					return;
-				}
-			}
-			$payment_method = $order->get_payment_method();
-			$order_status = $order->get_status();
-			$status_to_display = str_replace("wc-", "", get_option( 'wsb_hub3_order_status', 'on-hold' ));
-			if( 'bacs' != $payment_method || $status_to_display != $order_status) {
-				return;
-			}
-			$order = apply_filters( 'wsb_hub3_order_images', $order );
-			$barcode_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_barcode') );
-			$barcode_width = $a['width'] . "px";
-			if($barcode_image){
-				$html.="<p class='barcode-text'><img style='width: " . esc_html($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></p>";
-			}
+		$order = self::order_to_show();
+		if ( ! $order ) {
+			return '';
 		}
-		return $html;
+		$barcode_image = Wsb_Hub3_Files::url( $order->get_meta('_wsb_hub3_barcode') );
+		if ( ! $barcode_image ) {
+			return '';
+		}
+		$barcode_width = ( absint( $a['width'] ) ?: 400 ) . 'px';
+		return "<p class='barcode-text'><img style='width: " . esc_attr($barcode_width) . "' src='". esc_url( $barcode_image ) ."' alt='barcode' /></p>";
 
+	}
+
+	/**
+	 * Order from the thank-you URL (order-received) or from ?order_id= on a custom thank-you page,
+	 * if the visitor may see it and HUB3 data is shown for it. Missing images are recreated.
+	 * @since    3.1.0
+	 */
+	private static function order_to_show() {
+		global $wp;
+		if ( isset( $wp->query_vars['order-received'] ) ) {
+			$order_id = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
+		} else {
+			$order_id = isset( $_GET['order_id'] ) ? absint( $_GET['order_id'] ) : 0;
+		}
+		$order = $order_id ? wc_get_order( $order_id ) : false;
+		if ( ! $order || ! self::can_view( $order ) ) {
+			return null;
+		}
+		if ( 'yes' === get_option( 'wsb_hub3_croatian_customers_only', 'no' ) && 'HR' !== $order->get_billing_country() ) {
+			return null;
+		}
+		$status_to_display = str_replace( 'wc-', '', get_option( 'wsb_hub3_order_status', 'on-hold' ) );
+		if ( 'bacs' !== $order->get_payment_method() || $status_to_display !== $order->get_status() ) {
+			return null;
+		}
+		// The stylesheet is otherwise only loaded on checkout and account pages.
+		wp_enqueue_style( 'wsb-hub3' );
+		return apply_filters( 'wsb_hub3_order_images', $order );
 	}
 
 	/**

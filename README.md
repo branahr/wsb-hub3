@@ -5,8 +5,7 @@ Plugin uses [bigfish.software](https://hub3.bigfish.software) API to generate ba
 You can display payment details to the customer either in text/html format, or generated HUB-3A slip in jpg with all details on it.
 If admin updates an order from the backend (i.e. adds a new product to the order or apply a coupon code), barcode and HUB3 slip will be re-created.
 
-3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer will see the select list in frontend and can choose which one to use
-for payment. If only one IBAN, select list is not shown.
+3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer can choose which one to use for payment at checkout. If only one IBAN, no choice is shown.
 
 3.1.0: Payment data is validated according to the HUB-3 standard and FINA rules for payment models and references, slip and barcode are embedded in emails, and images are stored in the uploads folder so plugin updates no longer delete them.
 
@@ -24,7 +23,7 @@ Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins
 ### Features
 
 - Sequential order number plugins supported
-- Multiple IBANs (Works only for standard checkout, not with BLOCKS!)
+- Multiple IBANs: customers choose the bank account at checkout (block and classic checkout)
 - Selectable display options for payment details
 - JPG, PNG or GIF format can be selected for barcode image
 - Adjustable reference number pattern with live preview in settings
@@ -90,6 +89,16 @@ The HUB-3 barcode allows only a limited number of characters, so the settings do
 
 If recipient data saved with an older plugin version is too long, a notice is shown in the admin area.
 
+### Bank accounts (IBAN)
+
+The slip and barcode use the bank accounts of the _Direct bank transfer_ payment method:
+
+- one account: it is used automatically
+- more accounts: the customer chooses one at checkout, shown as radio buttons under the payment methods (block checkout) or in the bank transfer description (classic checkout)
+- no account with a valid IBAN: the IBAN from HUB3 recipient settings is used
+
+When _Show bank accounts_ is enabled, the chosen account is listed first and marked on the thankyou page and in emails.
+
 ### Emails
 
 Slip and barcode are embedded in emails, not linked from the website. They show even when the website is not reachable (e.g. Cloudflare "Under attack" mode) and in email clients that block external images. If your email plugin sends emails through an API that doesn't support embedded images, turn off _Embed images in emails_ in the general settings.
@@ -99,7 +108,7 @@ Slip and barcode are embedded in emails, not linked from the website. They show 
 - `[wsb_hub3 width="1100"]` shows the HUB-3A slip
 - `[wsb_barcode width="400"]` shows the barcode
 
-Use them on a custom thankyou page. They show images only for a valid order key in the URL or to the logged-in customer who placed the order.
+Use them in the _Order Confirmation_ template (block themes), on the checkout page (classic themes) or on a custom thankyou page that has `order_id` and `key` in its URL (e.g. `?order_id=123&key=wc_order_...`). They show images only for a valid order key in the URL or to the logged-in customer who placed the order. To avoid showing payment details twice, set _Show on thankyou page_ to _Nothing (use shortcodes)_.
 
 ### Where are the images stored?
 
@@ -126,6 +135,10 @@ Open the order in the admin area: a note explains why the barcode couldn't be ge
 
 FINA allows at most 3 parts, 12 digits per part and 22 characters in total. If the reference is longer, the sufix, then the prefix, then the date are left out, so banks accept the payment. A note is added to the order. Use the reference preview in the recipient settings to choose a layout that fits.
 
+### Which IBAN is shown on the slip?
+
+The account the customer chose at checkout from the _Direct bank transfer_ bank accounts. If there is only one account it is used automatically, and if there is none, the IBAN from HUB3 recipient settings is used. Orders placed with the block checkout before version 3.1.0 keep the IBAN from HUB3 recipient settings.
+
 ### Which payment model should I use?
 
 Use HR00 if you don't need a check digit, HR01 if you want the bank to check the reference with a check digit (added automatically), or HR99 if you don't use a reference at all.
@@ -137,6 +150,12 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 - Feature: Payment model selection according to FINA rules: HR00, HR01 (check digit added automatically) and HR99 (no reference)
 - Feature: Live payment reference preview in recipient settings
 - Feature: Slip and barcode images are embedded in emails, so they show even when the website is not reachable (e.g. Cloudflare "Under attack" mode) or the email client blocks external images
+- Feature: Customers can choose the bank account (IBAN) in the block checkout, shown as radio buttons under the payment methods
+- Enhancement: Classic checkout shows the bank accounts as radio buttons instead of a select list
+- Enhancement: The chosen bank account is listed first and marked in the bank account list on the thankyou page and in emails
+- Enhancement: Admin notices when a Direct bank transfer account has an invalid IBAN, or the IBAN in HUB3 settings is not one of the bank accounts
+- Enhancement: Declared compatibility with WooCommerce Cart and Checkout blocks
+- Enhancement: Bundled translations are used for strings missing from the WordPress.org language pack
 - Enhancement: Payment reference follows FINA rules (at most 3 parts, 12 digits per part, digits only, 22 characters)
 - Enhancement: Length limits and live character counters for settings fields, according to HUB-3 limits
 - Enhancement: Input masks for IBAN, postcode, reference prefix/sufix and purpose code, with purpose code suggestions
@@ -153,6 +172,12 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 - Fix: Payment description could exceed 35 characters after inserting the order number
 - Fix: Reference date format validation
 - Fix: [wsb_hub3] and [wsb_barcode] shortcodes caused a fatal error
+- Fix: [wsb_hub3] and [wsb_barcode] shortcodes showed nothing on custom thankyou pages, because they worked only on the checkout page
+- Enhancement: New _Show on thankyou page_ option _Nothing (use shortcodes)_, so payment details are not shown twice
+- Security: Shortcode width is limited to a number
+- Fix: With the block checkout, the slip used the IBAN from HUB3 settings instead of a Direct bank transfer account
+- Fix: With one bank account, the classic checkout printed a hidden field outside the payment method
+- Security: Only IBANs of Direct bank transfer accounts are accepted as the customer's choice
 - Security: Image file names contain a random token, so other customers' slips can't be opened by guessing the order number
 - Security: [wsb_hub3] and [wsb_barcode] shortcodes show images only with a valid order key or to the logged-in customer
 - Security: SSL certificate verification enabled for barcode service requests

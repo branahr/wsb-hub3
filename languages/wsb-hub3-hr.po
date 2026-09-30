@@ -684,3 +684,33 @@ msgstr "Ugradi slike u emailove"
 #: admin/class-wsb-hub3-admin.php
 msgid "Send slip and barcode inside the email instead of linking to images on the website. Images then also show when the website is not reachable, e.g. behind Cloudflare \"Under attack\" mode. Turn off only if your email plugin does not support embedded images."
 msgstr "Uplatnica i barkod šalju se unutar emaila umjesto poveznice na slike na webu. Slike se tada prikazuju i kada web nije dostupan, npr. iza Cloudflare \"Under attack\" načina rada. Isključite samo ako vaš plugin za slanje emailova ne podržava ugrađene slike."
+
+#: public/class-wsb-hub3-public.php
+msgid "(selected for payment)"
+msgstr "(odabran za uplatu)"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Customers pay to the bank accounts of the Direct bank transfer payment method; with more than one account they choose at checkout. This IBAN is used only if Direct bank transfer has no valid account, and for orders placed before the customer could choose."
+msgstr "Kupci plaćaju na bankovne račune načina plaćanja izravni bankovni prijenos; ako ih je više, biraju račun na blagajni. Ovaj IBAN koristi se samo ako izravni bankovni prijenos nema ispravan račun te za narudžbe zaprimljene prije nego što je kupac mogao birati."
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Edit bank accounts"
+msgstr "Uredi bankovne račune"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Nothing (use shortcodes)"
+msgstr "Ništa (koristim shortcodeove)"
+
+#: admin/class-wsb-hub3-admin.php
+msgid "Choose \"Nothing\" if you show payment details with the [wsb_hub3] and [wsb_barcode] shortcodes, so they are not shown twice."
+msgstr "Odaberite \"Ništa\" ako podatke za plaćanje prikazujete shortcodeovima [wsb_hub3] i [wsb_barcode], kako se ne bi prikazali dvaput."
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "These bank accounts in the %1$s payment method have an invalid IBAN, so customers can't choose them for HUB3 payments: %2$s."
+msgstr "Ovi bankovni računi u načinu plaćanja %1$s imaju neispravan IBAN pa ih kupci ne mogu odabrati za HUB3 plaćanje: %2$s."
+
+#: admin/class-wsb-hub3-admin.php
+#, php-format
+msgid "Customers pay to the bank accounts set up in the %1$s payment method (%2$s). The IBAN %3$s in the HUB3 recipient settings is not one of them, so it is only used for orders placed before customers could choose an account."
+msgstr "Kupci plaćaju na bankovne račune postavljene u načinu plaćanja %1$s (%2$s). IBAN %3$s iz HUB3 postavki primatelja nije jedan od njih pa se koristi samo za narudžbe zaprimljene prije nego što su kupci mogli odabrati račun."
