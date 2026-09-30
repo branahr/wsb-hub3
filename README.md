@@ -156,6 +156,10 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 
 ## Changelog
 
+### 3.1.1
+
+- Fix: Files missing from the 3.1.0 package caused a fatal error after updating
+
 ### 3.1.0
 
 - Feature: Payment model selection according to FINA rules: HR00, HR01 (check digit added automatically) and HR99 (no reference)

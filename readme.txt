@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,6 +177,9 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 
 == Changelog ==
 
+= 3.1.1 =
+* Fix: Files missing from the 3.1.0 package caused a fatal error after updating
+
 = 3.1.0 =
 * Feature: Payment model selection according to FINA rules: HR00, HR01 (check digit added automatically) and HR99 (no reference)
 * Feature: Live payment reference preview in recipient settings
@@ -294,6 +297,9 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 * Initial release of the plugin.
 
 == Upgrade Notice ==
+
+= 3.1.1 =
+Fixes a fatal error in 3.1.0 caused by missing files. Update immediately.
 
 = 3.1.0 =
 Payment references now follow FINA rules: after updating, check the payment model and reference in HUB3 recipient settings. Slip and barcode are embedded in emails and stored in uploads.
