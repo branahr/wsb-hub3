@@ -20,7 +20,18 @@ If admin updates an order from the backend (i.e. adds a new product to the order
 
 3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer can choose which one to use for payment at checkout. If only one IBAN, no choice is shown.
 
-3.1.0: Payment data is validated according to the HUB-3 standard and FINA rules for payment models and references, slip and barcode are embedded in emails, and images are stored in the uploads folder so plugin updates no longer delete them.
+3.1.0: Big update focused on payments that banks accept, a better customer experience and privacy:
+
+* **FINA rules for payment models and references**: choose HR00, HR01 (check digit added automatically) or HR99. The reference follows FINA rules (at most 3 parts, digits only, 22 characters), and the settings show a live preview for your latest order.
+* **HUB-3 validation**: settings accept only values the HUB-3 barcode allows, with live character counters, input masks and IBAN check digit validation. Croatian letters and text pasted from other documents are handled correctly.
+* **Bank account choice in block and classic checkout**: with more than one Direct bank transfer account, customers choose one at checkout (radio buttons under the payment methods), and the slip and barcode use that account.
+* **Images embedded in emails**: slip and barcode are sent inside the email, so they show even when the website is not reachable (e.g. Cloudflare "Under attack" mode) or the email client blocks external images.
+* **Safer image storage**: images are stored in the uploads folder, so plugin updates no longer delete them, and file names contain a random part, so other customers' slips can't be opened by guessing an order number. Missing images are recreated automatically.
+* **Shortcodes on custom thankyou pages**: [wsb_hub3] and [wsb_barcode] now work on any page, shown only with a valid order key or to the customer who placed the order. The new *Nothing (use shortcodes)* option prevents showing payment details twice.
+* **Clear messages when something is wrong**: admin notices for settings that banks or the barcode service would reject, and order notes and WooCommerce logs when a barcode can't be generated or the reference had to be adjusted.
+* **Compatibility**: declared compatible with WooCommerce Cart and Checkout blocks and HPOS; bundled Croatian translations fill in strings missing from the WordPress.org language pack.
+
+After updating, check the payment model and reference in HUB3 recipient settings, and the bank accounts in the Direct bank transfer payment method.
 
 
 ### Requirements ###
