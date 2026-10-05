@@ -759,6 +759,9 @@ class Wsb_Hub3_Public {
 		
 		//exit;
 		//remove_action( 'woocommerce_update_order', __FUNCTION__, 25, 2 );
+		if ( ! $order instanceof WC_Order ) {
+			return;
+		}
 		$data = array();
 		$data['payment_method'] = $order->get_payment_method();
 		if('bacs' != $data['payment_method']) {

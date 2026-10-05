@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -177,6 +177,9 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 
 == Changelog ==
 
+= 3.1.2 =
+* Fix: Fatal error in the admin after an order was refunded or cancelled with a refund (e.g. card payments)
+
 = 3.1.1 =
 * Fix: Files missing from the 3.1.0 package caused a fatal error after updating
 
@@ -297,6 +300,9 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 * Initial release of the plugin.
 
 == Upgrade Notice ==
+
+= 3.1.2 =
+Fixes a fatal error in the admin after a refund. Update immediately.
 
 = 3.1.1 =
 Fixes a fatal error in 3.1.0 caused by missing files. Update immediately.

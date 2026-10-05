@@ -156,6 +156,10 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 
 ## Changelog
 
+### 3.1.2
+
+- Fix: Fatal error in the admin after an order was refunded or cancelled with a refund (e.g. card payments)
+
 ### 3.1.1
 
 - Fix: Files missing from the 3.1.0 package caused a fatal error after updating

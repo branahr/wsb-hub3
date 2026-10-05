@@ -905,8 +905,9 @@ class Wsb_Hub3_Admin {
 	 * Payment reference the given settings produce for the latest order, dated today.
 	 */
 	private function reference_example( $settings, &$changes = null, &$order_number = null ) {
-		$latest       = wc_get_orders( array( 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
-		$order_number = $latest ? (string) $latest[0]->get_order_number() : '1';
+		// Refunds (e.g. from cancelling a card payment) are newer than their order but have no order number.
+		$latest       = wc_get_orders( array( 'type' => 'shop_order', 'limit' => 1, 'orderby' => 'date', 'order' => 'DESC' ) );
+		$order_number = ( $latest && $latest[0] instanceof WC_Order ) ? (string) $latest[0]->get_order_number() : '1';
 		return Wsb_Hub3_Validator::build_reference(
 			$settings['model'],
 			$settings['prefix'],
