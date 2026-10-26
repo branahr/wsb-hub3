@@ -1,19 +1,18 @@
 msgid ""
 msgstr ""
 "Language: hr\n"
-"POT-Creation-Date: 2020-05-15 07:27+0000\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
-"n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2;\n"
-"PO-Revision-Date: 2023-05-09 07:26+0000\n"
+"POT-Creation-Date: 2026-10-26 12:00+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2;\n"
+"PO-Revision-Date: 2026-10-26 12:00+0000\n"
 "X-Generator: Loco https://localise.biz/\n"
-"Project-Id-Version: Plugins - WSB HUB3 - Stable (latest release)\n"
+"Project-Id-Version: WSB HUB3 3.1.3\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: Hrvatski\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Loco-Version: 2.3.4; wp-5.4.2-alpha-47791"
+"X-Loco-Version: 2.3.4; wp-5.4.2-alpha-47791\n"
 
 #: public/class-wsb-hub3-public.php:667
 msgid "Account to pay"
@@ -156,8 +155,7 @@ msgstr "Samo za hrvatske kupce"
 
 #: admin/class-wsb-hub3-admin.php:258
 msgid "For large barcode only"
-msgstr ""
-"Samo za veliki barkod (uplatnica s malim barkodom je uvijek u jpg formatu)"
+msgstr "Samo za veliki barkod (uplatnica s malim barkodom je uvijek u jpg formatu)"
 
 #: admin/class-wsb-hub3-admin.php:115 admin/class-wsb-hub3-admin.php:476
 msgid "General settings"
@@ -202,18 +200,13 @@ msgid "HUB3"
 msgstr "HUB3"
 
 #: admin/class-wsb-hub3-admin.php:721
-msgid ""
-"HUB3 plugin works only if \"Direct bank transfer\" payment method is active!"
-msgstr ""
-"HUB3 dodatak radi jedino ako je uključena metoda plaćanja \"Direktna "
-"bankovna transakcija\"."
+msgid "HUB3 plugin works only if \"Direct bank transfer\" payment method is active!"
+msgstr "HUB3 dodatak radi jedino ako je uključena metoda plaćanja \"Direktna bankovna transakcija\"."
 
+#  msgid "HUB3 plugin works properly only with HRK as default currency!"
 #: admin/class-wsb-hub3-admin.php:710
-#| msgid "HUB3 plugin works properly only with HRK as default currency!"
 msgid "HUB3 plugin works properly only with HRK or EUR as a default currency!"
-msgstr ""
-"HUB3 dodatak radit će ispravno samo ako je zadana valuta trgovine HRK ili "
-"EUR!"
+msgstr "HUB3 dodatak radit će ispravno samo ako je zadana valuta trgovine HRK ili EUR!"
 
 #: admin/class-wsb-hub3-admin.php:356 admin/class-wsb-hub3-admin.php:358
 #: public/class-wsb-hub3-public.php:479
@@ -486,9 +479,7 @@ msgstr "Prikaži na stranici zahvale"
 
 #: admin/class-wsb-hub3-admin.php:142
 msgid "Show the list of BACS bank accounts on thankyou page"
-msgstr ""
-"Omogući na stranici zahvale prikaz svih bankovnih računa upisanih u \"BACS\" "
-"metodu plaćanja."
+msgstr "Omogući na stranici zahvale prikaz svih bankovnih računa upisanih u \"BACS\" metodu plaćanja."
 
 #: admin/class-wsb-hub3-admin.php:154
 msgid "Text above barcode"
@@ -504,9 +495,7 @@ msgstr "Tekst koji će biti prikazan iznad barkoda."
 
 #: admin/class-wsb-hub3-admin.php:148
 msgid "Text to be shown above payment details"
-msgstr ""
-"Opisni tekst koji će biti prikazan kupcu iznad podataka za plaćanje (na "
-"stranici zahvale i u detaljima narudžbe)."
+msgstr "Opisni tekst koji će biti prikazan kupcu iznad podataka za plaćanje (na stranici zahvale i u detaljima narudžbe)."
 
 #: includes/class-wsb-hub3-validator.php:360
 msgid "Thank you page display parameter can not be empty"
@@ -714,3 +703,115 @@ msgstr "Ovi bankovni računi u načinu plaćanja %1$s imaju neispravan IBAN pa i
 #, php-format
 msgid "Customers pay to the bank accounts set up in the %1$s payment method (%2$s). The IBAN %3$s in the HUB3 recipient settings is not one of them, so it is only used for orders placed before customers could choose an account."
 msgstr "Kupci plaćaju na bankovne račune postavljene u načinu plaćanja %1$s (%2$s). IBAN %3$s iz HUB3 postavki primatelja nije jedan od njih pa se koristi samo za narudžbe zaprimljene prije nego što su kupci mogli odabrati račun."
+
+#: admin/class-wsb-hub3-admin.php:583
+msgid "WSB PayByCode"
+msgstr "WSB PayByCode"
+
+#: admin/class-wsb-hub3-admin.php:544
+msgid "WSB PayByCode for WooCommerce"
+msgstr "WSB PayByCode for WooCommerce"
+
+#: admin/class-wsb-hub3-admin.php:534
+msgid "Need local code generation, SEPA QR codes or payment reminders?"
+msgstr "Trebate lokalno generiranje kodova, SEPA QR kodove ili podsjetnike za plaćanje?"
+
+#: admin/class-wsb-hub3-admin.php:534
+msgid "Explore WSB PayByCode"
+msgstr "Upoznajte WSB PayByCode"
+
+#: admin/class-wsb-hub3-admin.php:546
+msgid "WSB PayByCode is active and replaces WSB HUB3. Deactivate WSB HUB3 to avoid showing duplicate payment details and codes."
+msgstr "WSB PayByCode je aktivan i zamjenjuje WSB HUB3. Deaktivirajte WSB HUB3 kako biste izbjegli dvostruki prikaz podataka za plaćanje i kodova."
+
+#: admin/class-wsb-hub3-admin.php:548
+msgid "WSB HUB3 is the free plugin for Croatian HUB-3 bank transfer payments. WSB PayByCode for WooCommerce is a separate paid plugin for SEPA bank transfers, including Croatian payments. It replaces WSB HUB3; it is not an add-on and the two plugins are not intended to run together."
+msgstr "WSB HUB3 je besplatan plugin za hrvatske HUB-3 bankovne uplate. WSB PayByCode for WooCommerce zaseban je komercijalni plugin za SEPA bankovne uplate, uključujući hrvatske uplate. Zamjenjuje WSB HUB3; nije njegov dodatak i ta dva plugina nisu predviđena za istodobni rad."
+
+#: admin/class-wsb-hub3-admin.php:549
+msgid "What WSB PayByCode offers"
+msgstr "Što nudi WSB PayByCode"
+
+#: admin/class-wsb-hub3-admin.php:551
+msgid "Local generation, privacy and GDPR"
+msgstr "Lokalno generiranje, privatnost i GDPR"
+
+#: admin/class-wsb-hub3-admin.php:551
+msgid "Payment codes are generated on your server. The customer and payment details needed to create them are not sent to an external barcode service, reducing third-party processing and giving you more control over personal data in the context of GDPR."
+msgstr "Kodovi za plaćanje generiraju se na vašem poslužitelju. Podaci kupaca i plaćanja potrebni za njihovu izradu ne šalju se vanjskom barcode servisu. Time se smanjuje obrada kod trećih strana i dobivate veću kontrolu nad osobnim podacima u kontekstu GDPR-a."
+
+#: admin/class-wsb-hub3-admin.php:552
+msgid "No network wait for code generation"
+msgstr "Generiranje kodova bez mrežnog čekanja"
+
+#: admin/class-wsb-hub3-admin.php:552
+msgid "Code generation avoids sending data over the network and waiting for a barcode API response. Actual generation time still depends on your server."
+msgstr "Generiranje kodova ne zahtijeva slanje podataka mrežom ni čekanje odgovora vanjskog barcode API-ja. Stvarno vrijeme generiranja i dalje ovisi o vašem poslužitelju."
+
+#: admin/class-wsb-hub3-admin.php:553
+msgid "Independence from an external barcode service"
+msgstr "Neovisnost o vanjskom barcode servisu"
+
+#: admin/class-wsb-hub3-admin.php:553
+msgid "Generating payment codes does not depend on the availability, rate limits or response times of a third-party barcode service."
+msgstr "Generiranje kodova za plaćanje ne ovisi o dostupnosti, ograničenjima broja zahtjeva ni odzivu vanjskog barcode servisa."
+
+#: admin/class-wsb-hub3-admin.php:554
+msgid "HUB-3 and SEPA payments"
+msgstr "HUB-3 i SEPA plaćanja"
+
+#: admin/class-wsb-hub3-admin.php:554
+msgid "Use HUB-3 for Croatian payments and EPC QR codes for supported SEPA payments. Scanning EPC QR codes requires a banking app that supports the format."
+msgstr "Koristite HUB-3 za hrvatske uplate i EPC QR kodove za podržana SEPA plaćanja. Za skeniranje EPC QR kodova potrebna je bankovna aplikacija koja podržava taj format."
+
+#: admin/class-wsb-hub3-admin.php:555
+msgid "Bank accounts by country and currency"
+msgstr "Bankovni računi prema zemlji i valuti"
+
+#: admin/class-wsb-hub3-admin.php:555
+msgid "Manage bank accounts with rules by country and currency, with an optional account choice at checkout."
+msgstr "Upravljajte bankovnim računima uz pravila prema zemlji i valuti te mogućnost izbora računa na blagajni."
+
+#: admin/class-wsb-hub3-admin.php:556
+msgid "Payment follow-up and practical tools"
+msgstr "Praćenje plaćanja i praktični alati"
+
+#: admin/class-wsb-hub3-admin.php:556
+msgid "Set up payment reminders and automatic cancellation of unpaid orders, offer copy buttons for payment details, include codes in WP Overnight PDF invoices, and translate custom text with Polylang or WPML."
+msgstr "Postavite podsjetnike za plaćanje i automatsko otkazivanje neplaćenih narudžbi, ponudite gumbe za kopiranje podataka za plaćanje, uključite kodove u WP Overnight PDF račune i prevedite prilagođene tekstove uz Polylang ili WPML."
+
+#: admin/class-wsb-hub3-admin.php:558
+msgid "The privacy benefit applies to payment code generation. License activation and update checks communicate separately with the licensing and update service. Local generation alone does not guarantee GDPR compliance."
+msgstr "Prednost u pogledu privatnosti odnosi se na generiranje kodova za plaćanje. Aktivacija licence i provjere nadogradnji zasebno komuniciraju sa servisom za licenciranje i nadogradnje. Samo lokalno generiranje ne jamči usklađenost s GDPR-om."
+
+#: admin/class-wsb-hub3-admin.php:559
+msgid "Requirements and license"
+msgstr "Zahtjevi i licenca"
+
+#: admin/class-wsb-hub3-admin.php:560
+msgid "Requires PHP 8.2+, WordPress 6.5+ and WooCommerce 9.0+."
+msgstr "Zahtijeva PHP 8.2+, WordPress 6.5+ i WooCommerce 9.0+."
+
+#: admin/class-wsb-hub3-admin.php:561
+msgid "The paid license includes one year of updates and email support. The installed plugin's features continue to work after the license expires."
+msgstr "Plaćena licenca uključuje godinu dana nadogradnji i podrške e-poštom. Funkcije instaliranog plugina nastavljaju raditi nakon isteka licence."
+
+#: admin/class-wsb-hub3-admin.php:562
+msgid "Switching from WSB HUB3"
+msgstr "Prijelaz s WSB HUB3"
+
+#: admin/class-wsb-hub3-admin.php:564
+msgid "Back up your site, then deactivate WSB HUB3 without deleting its settings."
+msgstr "Napravite sigurnosnu kopiju web-stranice, a zatim deaktivirajte WSB HUB3 bez brisanja njegovih postavki."
+
+#: admin/class-wsb-hub3-admin.php:565
+msgid "Install and activate WSB PayByCode. In PayByCode > Import WSB HUB3, review and import your existing settings and order data. Import also works while WSB HUB3 is inactive."
+msgstr "Instalirajte i aktivirajte WSB PayByCode. U odjeljku PayByCode > Uvoz WSB HUB3 pregledajte i uvezite postojeće postavke i podatke narudžbi. Uvoz radi i kada WSB HUB3 nije aktivan."
+
+#: admin/class-wsb-hub3-admin.php:566
+msgid "Check your bank accounts and display settings, then place a test bank transfer order. Keep WSB HUB3 deactivated when using PayByCode."
+msgstr "Provjerite bankovne račune i postavke prikaza pa napravite testnu narudžbu s bankovnom uplatom. WSB HUB3 ostavite deaktiviranim dok koristite PayByCode."
+
+#: admin/class-wsb-hub3-admin.php:568
+msgid "Learn more about WSB PayByCode"
+msgstr "Saznajte više o WSB PayByCode"

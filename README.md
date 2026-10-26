@@ -49,6 +49,25 @@ Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins
 - Shortcodes for HUB3 slip and barcode display on custom thankyou page
 - Order notes and WooCommerce logs when a barcode can't be generated
 
+### Need local generation or SEPA payment codes?
+
+WSB HUB3 remains the free plugin for Croatian HUB-3 bank transfer payments. [WSB PayByCode for WooCommerce](https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/) is a separate paid plugin that supports the Croatian HUB-3 standard and generates HUB-3 barcodes, alongside EPC QR codes for supported SEPA bank transfers. It replaces WSB HUB3; it is not an add-on or an unlock inside the free plugin. The two plugins are not intended to run together.
+
+WSB PayByCode offers:
+
+- **Local generation, privacy and GDPR:** customer and payment details needed to generate payment codes are processed on your store's server, without sending them to an external barcode service. This reduces third-party processing and gives you more control over personal data in the context of GDPR.
+- **No network wait for code generation:** no sending data over the network or waiting for a barcode API response. Actual generation time still depends on your server.
+- **Independence from a barcode service:** code generation does not depend on an external service's availability, rate limits or response times.
+- **Wider coverage:** HUB-3 for Croatia and EPC QR codes for supported SEPA payments. Scanning EPC QR codes requires a banking app that supports the format; SEPA support alone does not mean that an app can scan EPC QR codes.
+- **Bank account rules:** manage accounts by country and currency, with an optional account choice at checkout.
+- **Follow-up and practical tools:** payment reminders, automatic cancellation of unpaid orders, copy buttons for payment details, WP Overnight PDF invoice integration, and custom text translations through Polylang or WPML.
+
+The privacy benefit applies to **payment code generation**. License activation and update checks communicate separately with the licensing and update service. Local generation alone does not guarantee GDPR compliance.
+
+PayByCode requires **PHP 8.2+, WordPress 6.5+ and WooCommerce 9.0+**. A paid license includes one year of updates and email support. The installed plugin's features continue to work after the license expires.
+
+To switch: back up your site, deactivate WSB HUB3 without deleting its settings, then install and activate WSB PayByCode. In _PayByCode > Import WSB HUB3_, review and import your existing settings and order data; import also works while WSB HUB3 is inactive. Check your bank accounts and display settings and place a test bank transfer order. Keep WSB HUB3 deactivated when using PayByCode.
+
 ### Reference number pattern
 
 For payment reference number you can select one of several predefined patterns:
@@ -134,6 +153,10 @@ Slips and barcodes are stored in `wp-content/uploads/wsb-hub3/`, with a random p
 
 ## Frequently Asked Questions
 
+### Is WSB PayByCode an add-on for WSB HUB3?
+
+No. WSB HUB3 is the free plugin for Croatian HUB-3 payments. WSB PayByCode is a separate paid replacement with local code generation, HUB-3 and EPC/SEPA QR support, and additional tools. Deactivate WSB HUB3 before activating PayByCode; do not delete the free plugin's settings before reviewing the import. You can import from an inactive WSB HUB3 installation.
+
 ### Slip and barcode are not shown in emails
 
 Since version 3.1.0 images are embedded in emails, so they show even if the website is behind Cloudflare "Under attack" mode or a firewall. Check that _Embed images in emails_ is turned on in the general settings. If your email plugin sends emails through an API that doesn't support embedded images, turn the option off; images are then loaded from the website.
@@ -155,6 +178,14 @@ The account the customer chose at checkout from the _Direct bank transfer_ bank 
 Use HR00 if you don't need a check digit, HR01 if you want the bank to check the reference with a check digit (added automatically), or HR99 if you don't use a reference at all.
 
 ## Changelog
+
+### 3.1.3
+
+- Compatibility: Tested with WooCommerce 11.2.1
+- Enhancement: Information about WSB PayByCode as a separate replacement plugin, with requirements and migration instructions
+- Enhancement: Informational WSB PayByCode subsection in HUB3 settings, hidden when PayByCode is active
+- Enhancement: Updated English documentation and bundled Croatian translations
+- Maintenance: Updated plugin website links
 
 ### 3.1.2
 

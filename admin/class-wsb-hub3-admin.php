@@ -109,6 +109,9 @@ class Wsb_Hub3_Admin {
 	public function wsb_hub3_get_settings() {
 
 		global $current_section;
+		if ( 'paybycode' === $current_section ) {
+			return array();
+		}
 		$settings = array();
 		if ( $current_section == 'barcode' ) {
 			$settings = $this->wsb_hub3_barcode_settings();
@@ -515,8 +518,57 @@ class Wsb_Hub3_Admin {
 	 *	Output the settings
 	 */
 	public function wsb_hub3_output_settings() {
+		global $current_section;
+
+		if ( 'paybycode' === $current_section ) {
+			$GLOBALS['hide_save_button'] = true;
+			$this->wsb_hub3_output_paybycode();
+			return;
+		}
+
 		$settings = $this->wsb_hub3_get_settings();
 		WC_Admin_Settings::output_fields( $settings );
+
+		if ( empty( $current_section ) && ! defined( 'WSB_PBC_WC_VERSION' ) ) {
+			$url = admin_url( 'admin.php?page=wc-settings&tab=wsb_hub3_admin_tab&section=paybycode' );
+			echo '<p class="description wsb-hub3-paybycode-link">' . esc_html__( 'Need local code generation, SEPA QR codes or payment reminders?', 'wsb-hub3' ) . ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Explore WSB PayByCode', 'wsb-hub3' ) . '</a></p>';
+		}
+	}
+
+	/**
+	 * Present the separate replacement plugin without adding settings or remote resources.
+	 */
+	private function wsb_hub3_output_paybycode(): void {
+		?>
+		<div class="wsb-hub3-paybycode">
+			<h2><?php esc_html_e( 'WSB PayByCode for WooCommerce', 'wsb-hub3' ); ?></h2>
+			<?php if ( defined( 'WSB_PBC_WC_VERSION' ) ) { ?>
+				<p><?php esc_html_e( 'WSB PayByCode is active and replaces WSB HUB3. Deactivate WSB HUB3 to avoid showing duplicate payment details and codes.', 'wsb-hub3' ); ?></p>
+			<?php } else { ?>
+				<p><?php esc_html_e( 'WSB HUB3 is the free plugin for Croatian HUB-3 bank transfer payments. WSB PayByCode for WooCommerce is a separate paid plugin for SEPA bank transfers, including Croatian payments. It replaces WSB HUB3; it is not an add-on and the two plugins are not intended to run together.', 'wsb-hub3' ); ?></p>
+				<h3><?php esc_html_e( 'What WSB PayByCode offers', 'wsb-hub3' ); ?></h3>
+				<ul>
+					<li><strong><?php esc_html_e( 'Local generation, privacy and GDPR', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Payment codes are generated on your server. The customer and payment details needed to create them are not sent to an external barcode service, reducing third-party processing and giving you more control over personal data in the context of GDPR.', 'wsb-hub3' ); ?></li>
+					<li><strong><?php esc_html_e( 'No network wait for code generation', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Code generation avoids sending data over the network and waiting for a barcode API response. Actual generation time still depends on your server.', 'wsb-hub3' ); ?></li>
+					<li><strong><?php esc_html_e( 'Independence from an external barcode service', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Generating payment codes does not depend on the availability, rate limits or response times of a third-party barcode service.', 'wsb-hub3' ); ?></li>
+					<li><strong><?php esc_html_e( 'HUB-3 and SEPA payments', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Use HUB-3 for Croatian payments and EPC QR codes for supported SEPA payments. Scanning EPC QR codes requires a banking app that supports the format.', 'wsb-hub3' ); ?></li>
+					<li><strong><?php esc_html_e( 'Bank accounts by country and currency', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Manage bank accounts with rules by country and currency, with an optional account choice at checkout.', 'wsb-hub3' ); ?></li>
+					<li><strong><?php esc_html_e( 'Payment follow-up and practical tools', 'wsb-hub3' ); ?></strong><br><?php esc_html_e( 'Set up payment reminders and automatic cancellation of unpaid orders, offer copy buttons for payment details, include codes in WP Overnight PDF invoices, and translate custom text with Polylang or WPML.', 'wsb-hub3' ); ?></li>
+				</ul>
+				<p class="description"><?php esc_html_e( 'The privacy benefit applies to payment code generation. License activation and update checks communicate separately with the licensing and update service. Local generation alone does not guarantee GDPR compliance.', 'wsb-hub3' ); ?></p>
+				<h3><?php esc_html_e( 'Requirements and license', 'wsb-hub3' ); ?></h3>
+				<p><?php esc_html_e( 'Requires PHP 8.2+, WordPress 6.5+ and WooCommerce 9.0+.', 'wsb-hub3' ); ?></p>
+				<p><?php esc_html_e( 'The paid license includes one year of updates and email support. The installed plugin\'s features continue to work after the license expires.', 'wsb-hub3' ); ?></p>
+				<h3><?php esc_html_e( 'Switching from WSB HUB3', 'wsb-hub3' ); ?></h3>
+				<ol>
+					<li><?php esc_html_e( 'Back up your site, then deactivate WSB HUB3 without deleting its settings.', 'wsb-hub3' ); ?></li>
+					<li><?php esc_html_e( 'Install and activate WSB PayByCode. In PayByCode > Import WSB HUB3, review and import your existing settings and order data. Import also works while WSB HUB3 is inactive.', 'wsb-hub3' ); ?></li>
+					<li><?php esc_html_e( 'Check your bank accounts and display settings, then place a test bank transfer order. Keep WSB HUB3 deactivated when using PayByCode.', 'wsb-hub3' ); ?></li>
+				</ol>
+				<p><a class="button button-secondary" href="https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Learn more about WSB PayByCode', 'wsb-hub3' ); ?></a></p>
+			<?php } ?>
+		</div>
+		<?php
 	}
 
 	public function wsb_hub3_get_sections() {
@@ -527,6 +579,9 @@ class Wsb_Hub3_Admin {
 			'barcode' => __( 'Barcode', 'wsb-hub3' )
 			
 		);
+		if ( ! defined( 'WSB_PBC_WC_VERSION' ) ) {
+			$sections['paybycode'] = __( 'WSB PayByCode', 'wsb-hub3' );
+		}
 		return apply_filters( 'woocommerce_get_sections_wsb_hub3_admin_tab', $sections );
 
 	}
@@ -534,6 +589,9 @@ class Wsb_Hub3_Admin {
 	public function wsb_hub3_save() {
 		
 		global $current_section;
+		if ( 'paybycode' === $current_section ) {
+			return false;
+		}
 		$settings = $this->wsb_hub3_get_settings();
 		if ( $current_section ) {
 
