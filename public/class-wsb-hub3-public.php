@@ -513,15 +513,35 @@ class Wsb_Hub3_Public {
 	function get_reference($order_id, &$changes = null){
 		$order = wc_get_order( $order_id );
 		$date  = Wsb_Hub3_Validator::reference_date( get_option( 'wsb_hub3_receiver_reference_date', 'ddmmyyyy' ), strtotime( $order->get_date_created() ) );
-		return esc_html( Wsb_Hub3_Validator::build_reference(
-			Wsb_Hub3_Validator::receiver_model(),
+		$model = Wsb_Hub3_Validator::receiver_model();
+		$reference = Wsb_Hub3_Validator::build_reference(
+			$model,
 			get_option( 'wsb_hub3_receiver_reference_prefix' ),
 			get_option( 'wsb_hub3_receiver_reference', 'orderid' ),
 			$date,
 			$order->get_order_number(),
 			get_option( 'wsb_hub3_receiver_reference_sufix' ),
 			$changes
-		) );
+		);
+		/**
+		 * Filters the complete, unescaped payment reference before validation.
+		 * HR01 overrides must include their check digit; HR99 must remain empty.
+		 *
+		 * @param string   $reference Generated payment reference.
+		 * @param int      $order_id  Order ID (also compatible with the community filter).
+		 * @param WC_Order $order     Order being paid.
+		 * @param string   $model     Model without the HR prefix: 00, 01 or 99.
+		 */
+		$filtered = apply_filters( 'wsb_hub3_receiver_reference', $reference, $order->get_id(), $order, $model );
+		if ( $filtered !== $reference ) {
+			if ( Wsb_Hub3_Validator::is_valid_payment_reference( $model, $filtered ) ) {
+				$reference = $filtered;
+				$changes = array();
+			} else {
+				wc_get_logger()->warning( 'Invalid wsb_hub3_receiver_reference result for order ' . $order->get_id() . '; using the generated reference.', array( 'source' => 'wsb-hub3' ) );
+			}
+		}
+		return $reference;
 	}
 
 	/**
@@ -552,7 +572,19 @@ class Wsb_Hub3_Public {
 			$budget      -= mb_strlen( $piece );
 			$description .= $piece;
 		}
-		return mb_substr( trim( preg_replace( '/\s+/u', ' ', $description ) ), 0, $max );
+		$description = mb_substr( trim( preg_replace( '/\s+/u', ' ', $description ) ), 0, $max );
+		/**
+		 * Filters the plain-text payment description used by the barcode, slip and payment details.
+		 * The result is sanitized and limited to 35 characters.
+		 *
+		 * @param string   $description Generated payment description.
+		 * @param WC_Order $order       Order being paid.
+		 */
+		$filtered = apply_filters( 'wsb_hub3_payment_description', $description, $order );
+		if ( ! is_string( $filtered ) || $filtered === $description ) {
+			return $description;
+		}
+		return mb_substr( trim( preg_replace( '/\s+/u', ' ', sanitize_text_field( $filtered ) ) ), 0, $max );
 	}
 
 	function get_data_html($order_id){

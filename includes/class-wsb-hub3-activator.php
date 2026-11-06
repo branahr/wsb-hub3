@@ -28,7 +28,8 @@ class Wsb_Hub3_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
+		require_once __DIR__ . '/class-wsb-hub3-paybycode-notice.php';
+		Wsb_Hub3_Paybycode_Notice::activate( WSB_HUB3_VERSION );
 	}
 
 }

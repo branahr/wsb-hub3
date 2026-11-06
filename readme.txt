@@ -5,7 +5,7 @@ Tags: hub3, barcode, woocommerce, uplatnica
 Requires at least: 5.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.1.3
+Stable tag: 3.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,11 +18,15 @@ Plugin uses bigfish.software API to generate barcodes: https://hub3.bigfish.soft
 You can display payment details to the customer either in text/html format, or generated HUB-3A slip in jpg with all details on it. 
 If admin updates an order from the backend (i.e. adds a new product to the order or apply a coupon code), barcode and HUB3 slip will be re-created.
 
+**Need locally generated HUB-3 barcodes or SEPA QR codes?**
+
+[WSB PayByCode for WooCommerce](https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/) is a separate paid alternative supporting Croatian HUB-3 barcodes and EPC QR codes for compatible banking apps. It generates payment codes locally on your server and adds payment reminders and bank account rules. WSB HUB3 remains free and maintained. Deactivate WSB HUB3 when switching to PayByCode.
+
 3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer can choose which one to use for payment at checkout. If only one IBAN, no choice is shown.
 
 3.1.0: Big update focused on payments that banks accept, a better customer experience and privacy:
 
-* **FINA rules for payment models and references**: choose HR00, HR01 (check digit added automatically) or HR99. The reference follows FINA rules (at most 3 parts, digits only, 22 characters), and the settings show a live preview for your latest order.
+* **FINA rules for payment models and references**: choose HR00, HR01 (check digit added automatically) or HR99. The reference follows FINA rules (at most 3 numeric parts separated by hyphens, 22 characters), and the settings show a live preview for your latest order.
 * **HUB-3 validation**: settings accept only values the HUB-3 barcode allows, with live character counters, input masks and IBAN check digit validation. Croatian letters and text pasted from other documents are handled correctly.
 * **Bank account choice in block and classic checkout**: with more than one Direct bank transfer account, customers choose one at checkout (radio buttons under the payment methods), and the slip and barcode use that account.
 * **Images embedded in emails**: slip and barcode are sent inside the email, so they show even when the website is not reachable (e.g. Cloudflare "Under attack" mode) or the email client blocks external images.
@@ -61,9 +65,9 @@ After updating, check the payment model and reference in HUB3 recipient settings
 * Shortcodes for HUB3 slip and barcode display on custom thankyou page
 * Order notes and WooCommerce logs when a barcode can't be generated
 
-### Need local generation or SEPA payment codes? ###
+### More about WSB PayByCode ###
 
-WSB HUB3 remains the free plugin for Croatian HUB-3 bank transfer payments. [WSB PayByCode for WooCommerce](https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/) is a separate paid plugin that supports the Croatian HUB-3 standard and generates HUB-3 barcodes, alongside EPC QR codes for supported SEPA bank transfers. It replaces WSB HUB3; it is not an add-on or an unlock inside the free plugin. The two plugins are not intended to run together.
+PayByCode replaces WSB HUB3; it is not an add-on or an unlock inside the free plugin. The two plugins are not intended to run together.
 
 WSB PayByCode offers:
 
@@ -191,6 +195,12 @@ The account the customer chose at checkout from the *Direct bank transfer* bank 
 
 Use HR00 if you don't need a check digit, HR01 if you want the bank to check the reference with a check digit (added automatically), or HR99 if you don't use a reference at all.
 
+= Can a developer customize the reference and payment description? =
+
+Yes. Use `wsb_hub3_receiver_reference` (reference, order ID, order object, model) and `wsb_hub3_payment_description` (description, order object) in a site-specific plugin. Both filters apply to the barcode, payment slip and payment details. Reference overrides must be complete strings valid for the selected model, including the check digit for HR01; invalid results fall back to the generated reference and are logged. Customized descriptions are sanitized and limited to 35 characters. See README.md for examples.
+
+Callbacks should return consistent results for the same order. Existing saved images are not automatically regenerated when adding a filter: update the relevant unpaid order in the admin and verify the new payment details. Do not change references already sent to customers without coordinating the change. The settings preview does not run order-specific filters.
+
 == Screenshots ==
 
 1. HUB-3A slip with payment details
@@ -199,6 +209,13 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 4. HUB 3 barcode settings
 
 == Changelog ==
+
+= 3.1.4 =
+* Enhancement: Dismissible PayByCode introduction after updates, limited to plugin, update and HUB3 settings screens; dismissal is permanent for the site
+* Fix: Preserve valid hyphen-separated order numbers in payment references, counting each part towards the HUB-3 limits
+* Enhancement: Add the wsb_hub3_receiver_reference filter for complete, validated payment references
+* Enhancement: Add the wsb_hub3_payment_description filter for plain-text payment descriptions, limited to 35 characters
+* Compatibility: Tested with WooCommerce 11.2.2
 
 = 3.1.3 =
 * Compatibility: Tested with WooCommerce 11.2.1
@@ -330,6 +347,9 @@ Use HR00 if you don't need a check digit, HR01 if you want the bank to check the
 * Initial release of the plugin.
 
 == Upgrade Notice ==
+
+= 3.1.4 =
+Preserves valid hyphens in payment references and adds developer filters for the reference and description. Includes a permanently dismissible PayByCode introduction after updates. Existing saved images can be regenerated by updating the relevant unpaid order in the admin.
 
 = 3.1.3 =
 Tested with WooCommerce 11.2.1. Adds information about WSB PayByCode and switching from WSB HUB3. Existing HUB3 settings and payment behavior are unchanged.

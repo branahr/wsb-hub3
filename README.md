@@ -5,11 +5,15 @@ Plugin uses [bigfish.software](https://hub3.bigfish.software) API to generate ba
 You can display payment details to the customer either in text/html format, or generated HUB-3A slip in jpg with all details on it.
 If admin updates an order from the backend (i.e. adds a new product to the order or apply a coupon code), barcode and HUB3 slip will be re-created.
 
+**Need locally generated HUB-3 barcodes or SEPA QR codes?**
+
+[WSB PayByCode for WooCommerce](https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/) is a separate paid alternative supporting Croatian HUB-3 barcodes and EPC QR codes for compatible banking apps. It generates payment codes locally on your server and adds payment reminders and bank account rules. WSB HUB3 remains free and maintained. Deactivate WSB HUB3 when switching to PayByCode.
+
 3.0.1: If there is more than one IBAN (bank accounts) in BACS payment method, customer can choose which one to use for payment at checkout. If only one IBAN, no choice is shown.
 
 3.1.0: Big update focused on payments that banks accept, a better customer experience and privacy:
 
-- **FINA rules for payment models and references**: choose HR00, HR01 (check digit added automatically) or HR99. The reference follows FINA rules (at most 3 parts, digits only, 22 characters), and the settings show a live preview for your latest order.
+- **FINA rules for payment models and references**: choose HR00, HR01 (check digit added automatically) or HR99. The reference follows FINA rules (at most 3 numeric parts separated by hyphens, 22 characters), and the settings show a live preview for your latest order.
 - **HUB-3 validation**: settings accept only values the HUB-3 barcode allows, with live character counters, input masks and IBAN check digit validation. Croatian letters and text pasted from other documents are handled correctly.
 - **Bank account choice in block and classic checkout**: with more than one Direct bank transfer account, customers choose one at checkout (radio buttons under the payment methods), and the slip and barcode use that account.
 - **Images embedded in emails**: slip and barcode are sent inside the email, so they show even when the website is not reachable (e.g. Cloudflare "Under attack" mode) or the email client blocks external images.
@@ -49,9 +53,9 @@ Plugin page in WordPress repository: [WSB HUB3](https://hr.wordpress.org/plugins
 - Shortcodes for HUB3 slip and barcode display on custom thankyou page
 - Order notes and WooCommerce logs when a barcode can't be generated
 
-### Need local generation or SEPA payment codes?
+### More about WSB PayByCode
 
-WSB HUB3 remains the free plugin for Croatian HUB-3 bank transfer payments. [WSB PayByCode for WooCommerce](https://sobrioweb.eu/products/wsb-paybycode-for-woocommerce/) is a separate paid plugin that supports the Croatian HUB-3 standard and generates HUB-3 barcodes, alongside EPC QR codes for supported SEPA bank transfers. It replaces WSB HUB3; it is not an add-on or an unlock inside the free plugin. The two plugins are not intended to run together.
+PayByCode replaces WSB HUB3; it is not an add-on or an unlock inside the free plugin. The two plugins are not intended to run together.
 
 WSB PayByCode offers:
 
@@ -177,7 +181,47 @@ The account the customer chose at checkout from the _Direct bank transfer_ bank 
 
 Use HR00 if you don't need a check digit, HR01 if you want the bank to check the reference with a check digit (added automatically), or HR99 if you don't use a reference at all.
 
+## Developer filters
+
+Add customizations in a small site-specific plugin or an MU plugin, so HUB3 updates do not overwrite them. Both filters affect the barcode, payment slip and payment details. Callbacks should return the same result for the same order data: they may run more than once while generating or displaying a payment.
+
+### Payment reference
+
+`wsb_hub3_receiver_reference` receives the generated reference, order ID, `WC_Order` object and model (`00`, `01` or `99`). Return a **string containing the complete reference**, without `HR00`/`HR01`, HTML or escaping. The first two arguments are compatible with the community-proposed filter of the same name.
+
+The result must follow the selected model: up to three numeric parts of up to 12 digits, separated by hyphens, and at most 22 characters overall. For HR01 the returned value must already contain a valid check digit; the filter does not append another one. HR99 requires an empty string. An invalid result is ignored, the generated reference is retained, and a warning is written to the `wsb-hub3` WooCommerce log without logging the rejected value.
+
+```php
+add_filter( 'wsb_hub3_receiver_reference', function ( $reference, $order_id, $order, $model ) {
+    $custom = $order->get_meta( '_accounting_payment_reference' );
+    return '00' === $model && is_string( $custom ) && '' !== $custom ? $custom : $reference;
+}, 10, 4 );
+```
+
+Without a filter, valid numeric order numbers with hyphens retain their separators. Every segment counts towards the reference limits, and HR01 still adds its check digit automatically. Prefix, suffix and date are omitted when necessary to keep the order number within those limits. Invalid or oversized order numbers still use the existing numeric fallback.
+
+### Payment description
+
+`wsb_hub3_payment_description` receives the generated plain-text description and the `WC_Order` object. A customized string is sanitized, whitespace is normalized and the result is limited to 35 characters (including Croatian letters). Non-string results keep the generated description.
+
+```php
+add_filter( 'wsb_hub3_payment_description', function ( $description, $order ) {
+    $offer = $order->get_meta( '_offer_number' );
+    return is_string( $offer ) && '' !== $offer ? 'Ponuda ' . $offer : $description;
+}, 10, 2 );
+```
+
+These example metadata keys are supplied by your own integration; HUB3 does not create them. Configure and test callbacks before taking new orders. Existing saved barcode/slip images are not regenerated just by installing a callback: update the relevant unpaid order in the admin to regenerate its images, then verify the payment details. Avoid changing references already sent to customers without coordinating the change. The settings preview does not run order-specific filters.
+
 ## Changelog
+
+### 3.1.4
+
+- Enhancement: Dismissible PayByCode introduction after updates, limited to plugin, update and HUB3 settings screens; dismissal is permanent for the site
+- Fix: Preserve valid hyphen-separated order numbers in payment references, counting each part towards the HUB-3 limits
+- Enhancement: Add the `wsb_hub3_receiver_reference` filter for complete, validated payment references
+- Enhancement: Add the `wsb_hub3_payment_description` filter for plain-text payment descriptions, limited to 35 characters
+- Compatibility: Tested with WooCommerce 11.2.2
 
 ### 3.1.3
 

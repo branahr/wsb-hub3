@@ -53,3 +53,15 @@ h2.wsb-hub3-options-title {
 .wsb-hub3-paybycode li {
   margin-bottom: 12px;
 }
+
+#wsb-hub3-paybycode-notice p {
+  max-width: 1000px;
+}
+
+.wsb-hub3-notice-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 12px 0;
+}

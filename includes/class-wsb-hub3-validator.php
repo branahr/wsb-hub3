@@ -309,11 +309,15 @@ class Wsb_Hub3_Validator {
 		}
 		$check = '01' === (string) $model ? 1 : 0;
 
-		$order = preg_replace( '/\D/', '', (string) $order_number );
+		// A segmented order number already within the reference limits keeps its separators.
+		$order = (string) $order_number;
+		if ( ! self::is_valid_payment_reference( '00', $order ) || strlen( $order ) + $check > self::REFERENCE_MAX ) {
+			$order = preg_replace( '/\D/', '', $order );
+		}
 		if ( $order !== (string) $order_number ) {
 			$changes[] = 'digits';
 		}
-		if ( strlen( $order ) > self::REFERENCE_PART_MAX ) {
+		if ( false === strpos( $order, '-' ) && strlen( $order ) > self::REFERENCE_PART_MAX ) {
 			// The last digits of an order number are the ones that tell orders apart.
 			$order     = substr( $order, -self::REFERENCE_PART_MAX );
 			$changes[] = 'part_length';
@@ -346,7 +350,7 @@ class Wsb_Hub3_Validator {
 
 		// Leave out other parts first; the order number identifies the payment.
 		foreach ( array( 'sufix', 'prefix', 'date' ) as $key ) {
-			$too_many = count( $parts ) > self::REFERENCE_PARTS_MAX;
+			$too_many = count( $parts ) + ( isset( $parts['order'] ) ? substr_count( $order, '-' ) : 0 ) > self::REFERENCE_PARTS_MAX;
 			$too_long = strlen( implode( '-', $parts ) ) + $check > self::REFERENCE_MAX;
 			if ( ! $too_many && ! $too_long ) {
 				break;
@@ -362,6 +366,7 @@ class Wsb_Hub3_Validator {
 		}
 
 		if ( $check ) {
+			$parts = explode( '-', implode( '-', $parts ) );
 			$last = array_key_last( $parts );
 			// The check digit is appended to the last part, which may then still have at most 12 digits.
 			if ( strlen( $parts[ $last ] ) >= self::REFERENCE_PART_MAX ) {
@@ -373,6 +378,26 @@ class Wsb_Hub3_Validator {
 
 		$changes = array_values( array_unique( $changes ) );
 		return implode( '-', $parts );
+	}
+
+	/**
+	 * Validate a complete reference, including the supplied HR01 check digit.
+	 */
+	public static function is_valid_payment_reference( $model, $reference ) {
+		if ( ! is_string( $reference ) || ! in_array( (string) $model, self::MODELS, true ) ) {
+			return false;
+		}
+		if ( '99' === (string) $model ) {
+			return '' === $reference;
+		}
+		if ( strlen( $reference ) > self::REFERENCE_MAX || ! preg_match( '/^[0-9]{1,12}(-[0-9]{1,12}){0,2}$/D', $reference ) ) {
+			return false;
+		}
+		if ( '01' === (string) $model ) {
+			$digits = str_replace( '-', '', $reference );
+			return strlen( $digits ) > 1 && (int) substr( $digits, -1 ) === self::mod11ini( substr( $digits, 0, -1 ) );
+		}
+		return true;
 	}
 
 	/**

@@ -11,11 +11,11 @@
  * Plugin Name:       WSB HUB3
  * Plugin URI:        https://sobrioweb.eu/products/wsb-hub3-for-woocommerce/
  * Description:       Barcode payment details plugin for Woocommerce (for Croatian banks)
- * Version:           3.1.3
+ * Version:           3.1.4
  * Author:            Branko Borilovic
  * Author URI:        https://profiles.wordpress.org/branahr
  * WC requires at least: 7.1
- * WC tested up to: 	 11.2.1
+ * WC tested up to: 	 11.2.2
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       wsb-hub3
@@ -31,7 +31,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'WSB_HUB3_VERSION', '3.1.3' );
+define( 'WSB_HUB3_VERSION', '3.1.4' );
 
 /**
  * The code that runs during plugin activation.

@@ -195,7 +195,7 @@ class Wsb_Hub3_Admin {
                     'name'    => __( 'Show on order details page', 'wsb-hub3' ),
                     'type'    => 'select',
                     'class'   => 'wsb-hub3-admin-tab-field',
-                    'desc'    => __( '', 'wsb-hub3' ),
+                    'desc'    => '',
                     'id'      => 'wsb_hub3_display_details_order',
                     'options' => array(
                       'html'    => __( 'Html text + large barcode', 'wsb-hub3' ),
@@ -209,7 +209,7 @@ class Wsb_Hub3_Admin {
                     'name'    => __( 'Send in email', 'wsb-hub3' ),
                     'type'    => 'select',
                     'class'   => 'wsb-hub3-admin-tab-field',
-                    'desc'    => __( '', 'wsb-hub3' ),
+                    'desc'    => '',
                     'id'      => 'wsb_hub3_display_details_email',
                     'options' => array(
                       'html'    => __( 'Html text + large barcode', 'wsb-hub3' ),

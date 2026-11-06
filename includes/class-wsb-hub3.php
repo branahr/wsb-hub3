@@ -158,6 +158,15 @@ class Wsb_Hub3 {
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'wsb_hub3_notice' );
 		$this->loader->add_action( 'wp_ajax_wsb_hub3_reference_preview', $plugin_admin, 'wsb_hub3_reference_preview' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'wsb_hub3_migrate_files' );
+
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wsb-hub3-paybycode-notice.php';
+		$paybycode_notice = new Wsb_Hub3_Paybycode_Notice( $this->version );
+		$this->loader->add_action( 'admin_init', $paybycode_notice, 'sync' );
+		$this->loader->add_action( 'admin_notices', $paybycode_notice, 'render' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $paybycode_notice, 'enqueue_scripts' );
+		$this->loader->add_action( 'wp_ajax_wsb_hub3_paybycode_notice', $paybycode_notice, 'ajax_notice' );
+		$this->loader->add_action( 'wp_ajax_wsb_hub3_dismiss_paybycode_notice', $paybycode_notice, 'dismiss' );
+		$this->loader->add_action( 'admin_post_wsb_hub3_dismiss_paybycode_notice', $paybycode_notice, 'dismiss' );
 		
 
 	}
